@@ -3,7 +3,7 @@ OpenAPI
 
 ## Proposed Features
 
-### Improve API version support. 
+### Improve API version support
 
 Several options
 
