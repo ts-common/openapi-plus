@@ -3,7 +3,7 @@ OpenAPI
 
 A transpiler to transform OpenAPI with features to the standard OpenAPI (3.\*). Proposed components:
 - **OpenAPI+ parser.** It should produce staticly typed AST (using TypeScript type system). We may use the [Schema2Ts](http://github.com/ts-common/schema2ts) to generate the main part of the parser.
-- **Tranpiler form OpenAPI+ AST to OpenAPI AST**
+- **Tranpiler from OpenAPI+ AST to OpenAPI AST**
 
 ## Proposed Features
 
