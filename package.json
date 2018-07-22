@@ -6,7 +6,8 @@
   "scripts": {
     "tsc": "tsc",
     "tslint": "tslint --project .",
-    "test": "tsc && nyc mocha"
+    "test": "tsc && npm run tslint && nyc mocha",
+    "prepack": "npm install && tsc"
   },
   "repository": {
     "type": "git",

@@ -6,7 +6,8 @@
     "jsRules": {},
     "rules": {
         "semicolon": false,
-        "linebreak-style": false
+        "linebreak-style": false,
+        "no-unused-variable": false
     },
     "rulesDirectory": []
 }
