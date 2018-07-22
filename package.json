@@ -1,0 +1,28 @@
+{
+  "name": "@ts-common/openapi-plus",
+  "version": "0.0.0",
+  "description": "OpenAPI+",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "tslint": "tslint --project .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ts-common/openapi-plus.git"
+  },
+  "keywords": [
+    "openapi"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ts-common/openapi-plus/issues"
+  },
+  "homepage": "https://github.com/ts-common/openapi-plus#readme",
+  "devDependencies": {
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.0-rc"
+  }
+}
