@@ -8,6 +8,11 @@
         "semicolon": false,
         "linebreak-style": false,
         "no-unused-variable": false,
+        "ordered-imports":false,
+        "typedef": false,
+        "comment-format": false,
+        "only-arrow-functions": false,
+        "arrow-parens": false,
 
         "interface-over-type-literal": false,
         "type-literal-delimiter": false,
