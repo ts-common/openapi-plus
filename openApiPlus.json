@@ -287,6 +287,18 @@
         }
       }
     },
+    "operations": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/operation"
+        },
+        {
+          "items": {
+            "$ref": "#/definitions/operation"
+          }
+        }
+      ]
+    },
     "pathItem": {
       "type": "object",
       "additionalProperties": false,
@@ -300,25 +312,25 @@
           "type": "string"
         },
         "get": {
-          "$ref": "#/definitions/operation"
+          "$ref": "#/definitions/operations"
         },
         "put": {
-          "$ref": "#/definitions/operation"
+          "$ref": "#/definitions/operations"
         },
         "post": {
-          "$ref": "#/definitions/operation"
+          "$ref": "#/definitions/operations"
         },
         "delete": {
-          "$ref": "#/definitions/operation"
+          "$ref": "#/definitions/operations"
         },
         "options": {
-          "$ref": "#/definitions/operation"
+          "$ref": "#/definitions/operations"
         },
         "head": {
-          "$ref": "#/definitions/operation"
+          "$ref": "#/definitions/operations"
         },
         "patch": {
-          "$ref": "#/definitions/operation"
+          "$ref": "#/definitions/operations"
         },
         "parameters": {
           "$ref": "#/definitions/parametersList"
