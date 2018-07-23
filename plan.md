@@ -51,4 +51,4 @@ Currently, almost all Azure OpenAPI specifications are OpenAPI 2.0. There is no 
 }
 ```
 
-See also [JSON-Schema. Enumerated Values](https://spacetelescope.github.io/understanding-json-schema/reference/generic.html#enumerated-values)
+See also [JSON-Schema. Enumerated Values](https://spacetelescope.github.io/understanding-json-schema/reference/generic.html#enumerated-values).
