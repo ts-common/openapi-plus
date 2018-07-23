@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "tslint": "tslint --project .",
     "test": "tsc && npm run tslint && nyc mocha",
-    "schema": "schema2ts node_modules/swagger-schema-official/schema openapi.ts",
+    "schema": "schema2ts node_modules/swagger-schema-official/schema openApi.ts && schema2ts openApi2Plus openApiPlus.ts",
     "prepack": "npm install && npm run schema && tsc"
   },
   "repository": {

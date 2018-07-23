@@ -64,4 +64,5 @@ typings/
 
 *.js
 *.d.ts
-openapi.ts
+openApi.ts
+openApiPlus.ts
