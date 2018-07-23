@@ -1,0 +1,52 @@
+# Plan
+
+## Questions
+
+### OpenAPI 2.0 vs OpenAPI 3.0
+
+Currently, almost all Azure OpenAPI specifications are OpenAPI 2.0. There is no official JSON-Schema for OpenAPI 3.0. See https://github.com/OAI/OpenAPI-Specification/issues/1032.
+
+### Syntax
+
+#### Current
+
+```json
+{
+    "swagger": "2.0",
+
+    "paths": {
+        "somepath/something": {
+            "get": {
+                "operationId": "someOperationId"
+            }
+        }
+    }
+}
+```
+
+#### Proposed
+
+```json
+{
+    "swagger": "2.0",
+    "discriminator": "api-version",
+    "paths": {
+        "somepath/something": {
+            "get": [
+                {
+                    "operationId": "someOperationId",
+                    "parameters": {
+                        "api-version": { "enum": ["2013-05", "2013-06"] }
+                    }
+                },
+                {
+                    "operationId": "someOperationId",
+                    "parameters": {
+                        "api-version": { "enum": ["2013-06"] }
+                    }
+                }
+            ]
+        }
+    }
+}
+```

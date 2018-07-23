@@ -7,7 +7,19 @@
     "rules": {
         "semicolon": false,
         "linebreak-style": false,
-        "no-unused-variable": false
+        "no-unused-variable": false,
+
+        "interface-over-type-literal": false,
+        "type-literal-delimiter": false,
+        "member-ordering": false,
+        "typedef-whitespace": false,
+        "whitespace": false,
+        "trailing-comma": false,
+        "max-line-length": false,
+        "no-any": false,
+        "object-literal-sort-keys": false,
+        "no-trailing-whitespace": false,
+        "max-file-line-count": false
     },
     "rulesDirectory": []
 }
