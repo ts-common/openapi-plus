@@ -13,6 +13,7 @@
         "comment-format": false,
         "only-arrow-functions": false,
         "arrow-parens": false,
+        "newline-before-return": false,
 
         "interface-over-type-literal": false,
         "type-literal-delimiter": false,
