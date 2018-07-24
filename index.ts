@@ -3,6 +3,11 @@ import * as oaPlus from "./openApiPlus"
 import * as sm from "@ts-common/string-map"
 import * as _ from "@ts-common/iterator"
 import * as tuple from "@ts-common/tuple"
+import * as ps from "@ts-common/property-set"
+
+function isJsonReference<T>(v: oa.JsonReference|T): v is oa.JsonReference {
+    return (v as oa.JsonReference).$ref !== undefined
+}
 
 /**
  * Returns a name of the given parameter
@@ -12,7 +17,10 @@ import * as tuple from "@ts-common/tuple"
  * - the given parameter can have a `$ref`.
  * - the function should never return `undefined`
  */
-function getParameterName(parameter: oa.Parameter): string|undefined {
+function getParameterName(parameter: oa.Parameter|oa.JsonReference): string|undefined {
+    if (isJsonReference(parameter)) {
+        return undefined
+    }
     return parameter.name
 }
 
@@ -22,7 +30,13 @@ function getParameterName(parameter: oa.Parameter): string|undefined {
  *
  * TODO: the given parameter can have a `$ref` or a `schema`. The `schema` may have a `$ref` as well.
  */
-function getParameterEnum(parameter: oa.Parameter): ReadonlyArray<string>|undefined {
+function getParameterEnum(parameter: oa.Parameter|oa.JsonReference): ReadonlyArray<string>|undefined {
+    if (isJsonReference(parameter)) {
+        return undefined
+    }
+    if (parameter.in === "body") {
+        return undefined
+    }
     return parameter.enum
 }
 
@@ -88,8 +102,23 @@ function convertPathItem(
             ? tuple.tuple2(method, convertOperations(discriminator, operations))
             : undefined
     })
-    // TODO: we need to use propertyMap to properly clone the object.
-    return sm.stringMap(result)
+    const co = (key: Method) => {
+        const operations = pathItem[key]
+        return operations === undefined ? undefined : convertOperations(discriminator, operations)
+    }
+    const id = <K extends keyof oaPlus.PathItem>(k: K) => pathItem[k]
+    const factory: ps.PropertySetFactory<oa.PathItem> = {
+        $ref: id,
+        get: co,
+        put: co,
+        post: co,
+        delete: co,
+        options: co,
+        head: co,
+        patch: co,
+        parameters: id
+    }
+    return ps.propertySet(factory)
 }
 
 function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Paths {
@@ -97,17 +126,30 @@ function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Path
     const result = _.map(
         entries,
         ([path, pathItem]) => sm.entry(path, convertPathItem(discriminator, pathItem)))
-    // TODO: we need to use propertyMap to properly clone the object.
     return sm.stringMap(result)
 }
 
 function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.Main {
-    // TODO: we need to use propertyMap to properly clone the object.
-    return {
-        swagger: source.swagger,
-        info: source.info,
-        paths: convertPath(discriminator, source.paths),
+    const id = <K extends keyof oaPlus.Main>(k: K) => source[k]
+    const cp = (k: "paths") => convertPath(discriminator, source.paths)
+    const factory: ps.PropertySetFactory<oa.Main> = {
+        swagger: id,
+        info: id,
+        host: id,
+        basePath: id,
+        schemes: id,
+        consumes: id,
+        produces: id,
+        paths: cp,
+        definitions: id,
+        parameters: id,
+        responses: id,
+        security: id,
+        securityDefinitions: id,
+        tags: id,
+        externalDocs: id
     }
+    return ps.propertySet(factory)
 }
 
 /**
