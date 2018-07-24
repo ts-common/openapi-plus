@@ -38,14 +38,15 @@ function getDiscriminatorValues(
 
 function getOperations(discriminator: string, operation: oa.Operation): Iterable<sm.Entry<oa.Operation>> {
     const discriminators = getDiscriminatorValues(discriminator, operation)
+    // TODO: create an operation which allows only one discriminator value. (we need propertyMap here)
     return _.map(discriminators, d => sm.entry(d, operation))
 }
 
-function convertOperations(discriminator: string, operations: oaPlus.Operations): Iterable<sm.Entry<oa.Operation>> {
-    if (_.isArray(operations)) {
-        return _.flatMap(operations, o => getOperations(discriminator, o))
-    }
-    return getOperations(discriminator, operations)
+function convertOperations(discriminator: string, operations: oaPlus.Operations): sm.StringMap<oa.Operation> {
+    const operationArray = _.isArray(operations) ? operations : [operations]
+    const entries = _.flatMap(operationArray, o => getOperations(discriminator, o))
+    // TODO: call sm.groupBy and throw an exception if a binary merge function is called.
+    return sm.stringMap(entries)
 }
 
 type Method = "get"|"put"|"post"|"delete"|"options"|"head"|"patch"
@@ -59,14 +60,10 @@ function convertPathItem(
 ): sm.StringMap<oa.PathItem> {
     const operations = _.filterMap(methods, v => {
         const o = pathItem[v]
-        return o === undefined ? undefined : tuple.tuple2(v, o)
+        return o === undefined ? undefined : tuple.tuple2(v, convertOperations(discriminator, o))
     })
     return {}
 }
-
-//export function array<T>(...v: T[]): array.ImmutableArray<T> {
-//    return v as array.ImmutableArray<T>
-//}
 
 /**
  * The main function.
