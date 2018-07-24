@@ -4,65 +4,110 @@ import * as sm from "@ts-common/string-map"
 import * as _ from "@ts-common/iterator"
 import * as tuple from "@ts-common/tuple"
 
-// TODO: the given parameter can have a `$ref`
+/**
+ * Returns a name of the given parameter
+ * @param parameter an OpenAPI parameter.
+ *
+ * TODO:
+ * - the given parameter can have a `$ref`.
+ * - the function should never return `undefined`
+ */
 function getParameterName(parameter: oa.Parameter): string|undefined {
     return parameter.name
 }
 
-// TODO: the given parameter can have a `$ref` or a `schema`. The `schema` can have a `$ref` as well.
+/**
+ * Returns an enum of the given parameter.
+ * @param parameter an OpenAPI parameter
+ *
+ * TODO: the given parameter can have a `$ref` or a `schema`. The `schema` may have a `$ref` as well.
+ */
 function getParameterEnum(parameter: oa.Parameter): ReadonlyArray<string>|undefined {
     return parameter.enum
 }
 
-function getDiscriminatorValues(
-    discriminatorName: string, operation: oa.Operation
-): ReadonlyArray<string> {
+interface Discriminator {
+    readonly name: string
+    readonly value: string
+}
+
+function getOperation(
+    { name, value }: Discriminator, operation: oa.Operation
+): oa.Operation|undefined {
     const parameters = operation.parameters
 
     if (parameters === undefined) {
-        return []
+        // operation has no parameters
+        return undefined
     }
 
-    const parameter = _.find(parameters, p => getParameterName(p) === discriminatorName)
+    const parameter = _.find(parameters, p => getParameterName(p) === name)
     if (parameter === undefined) {
-        return []
+        // operation has no discriminator parameter
+        return undefined
     }
 
     const parameterEnum = getParameterEnum(parameter)
     if (parameterEnum === undefined) {
-        return []
+        // the discriminator parameter is not an enumeration
+        return undefined
     }
 
-    return parameterEnum
+    if (!_.find(parameterEnum, v => v === value)) {
+        // the operation is not compatible with the given discriminator value.
+        return undefined
+    }
+
+    // TODO: a discriminator parameter should have only one value.
+    return operation
 }
 
-function getOperations(discriminator: string, operation: oa.Operation): Iterable<sm.Entry<oa.Operation>> {
-    const discriminators = getDiscriminatorValues(discriminator, operation)
-    // TODO: create an operation which allows only one discriminator value. (we need propertyMap here)
-    return _.map(discriminators, d => sm.entry(d, operation))
-}
-
-function convertOperations(discriminator: string, operations: oaPlus.Operations): sm.StringMap<oa.Operation> {
+function convertOperations(
+    discriminator: Discriminator,
+    operations: oaPlus.Operations,
+): oa.Operation|undefined {
     const operationArray = _.isArray(operations) ? operations : [operations]
-    const entries = _.flatMap(operationArray, o => getOperations(discriminator, o))
-    // TODO: call sm.groupBy and throw an exception if a binary merge function is called.
-    return sm.stringMap(entries)
+    const result = _.toArray(_.filterMap(operationArray, o => getOperation(discriminator, o)))
+    // TODO: if result.length > 1 then we have more than one operation for the given discriminator
+    // value.
+    return result.length === 0 ? undefined : result[0]
 }
 
 type Method = "get"|"put"|"post"|"delete"|"options"|"head"|"patch"
 
 const methods: ReadonlyArray<Method> = ["get", "put", "post", "delete", "options", "head", "patch"]
 
-// TODO: this function requires a propertyMap
 function convertPathItem(
-    discriminator: string,
-    pathItem: oaPlus.PathItem,
-): sm.StringMap<oa.PathItem> {
-    const operations = _.filterMap(methods, v => {
-        const o = pathItem[v]
-        return o === undefined ? undefined : tuple.tuple2(v, convertOperations(discriminator, o))
+    discriminator: Discriminator,
+    pathItem: oaPlus.PathItem
+): oa.PathItem {
+    // TODO: resolve `pathItem.$ref`.
+    const result = _.filterMap(methods, method => {
+        const operations = pathItem[method]
+        return operations !== undefined
+            ? tuple.tuple2(method, convertOperations(discriminator, operations))
+            : undefined
     })
-    return {}
+    // TODO: we need to use propertyMap to properly clone the object.
+    return sm.stringMap(result)
+}
+
+function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Paths {
+    const entries = sm.entries(paths)
+    const result = _.map(
+        entries,
+        ([path, pathItem]) => sm.entry(path, convertPathItem(discriminator, pathItem)))
+    // TODO: we need to use propertyMap to properly clone the object.
+    return sm.stringMap(result)
+}
+
+function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.Main {
+    // TODO: we need to use propertyMap to properly clone the object.
+    return {
+        swagger: source.swagger,
+        info: source.info,
+        paths: convertPath(discriminator, source.paths),
+    }
 }
 
 /**
@@ -105,6 +150,3 @@ export function main(): void {
     }
     const oaMain: oa.Main = oaPlusMain
 }
-
-// tslint:disable-next-line:no-console
-console.log("test")
