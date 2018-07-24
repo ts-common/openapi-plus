@@ -3,7 +3,7 @@
   "discriminator": "api-version",
   "info": {
     "title": "BatchManagement",
-    //"version": "2017-09-01",
+    "version": ["2017-09-01", "2017-05-01"],
     "x-ms-code-generation-settings": {
       "name": "BatchManagementClient"
     }
@@ -338,7 +338,7 @@
           "BatchAccount"
         ],
         "operationId": "BatchAccount_SynchronizeAutoStorageKeys",
-        "x-ms-examples": { // x-ms-examples were added in the new api-version, but they can be applicable to both
+        "x-ms-examples": {
           "BatchAccountSynchronizeAutoStorageKeys": { "$ref": "./examples/BatchAccountSynchronizeAutoStorageKeys.json" }
         },
         "description": "Synchronizes access keys for the auto-storage account configured for the specified Batch account.",
@@ -2134,18 +2134,7 @@
           "description": "The version of the application package."
         },
         "state": {
-          "type": "string",
-          "readOnly": true,
-          "description": "The current state of the application package.",
-          "enum": [
-            "Pending",
-            "Active",
-            "Unmapped"
-          ],
-          "x-ms-enum": {
-            "name": "PackageState",
-            "modelAsString": false
-          }
+          "$ref": "#/definitions/State"
         },
         "format": {
           "type": "string",
@@ -2171,6 +2160,39 @@
         }
       },
       "description": "An application package which represents a particular version of an application."
+    },
+    "State": {
+      "description": "The current state of the application package.",
+      "oneOf": [
+        {
+          "discriminator": ["2017-09-01"],
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "Pending",
+            "Active",
+            "Unmapped"
+           ],
+          "x-ms-enum": {
+            "name": "PackageState",
+            "modelAsString": false
+          }       
+        },
+        {
+          "discriminator": ["2017-05-01"],
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "pending",
+            "active",
+            "unmapped"
+           ],
+          "x-ms-enum": {
+            "name": "PackageState",
+            "modelAsString": false
+          }  
+        }
+      ]
     },
     "ListApplicationsResult": {
       "properties": {
@@ -2251,6 +2273,7 @@
       "x-ms-azure-resource": true
     },
     "ProxyResource": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "id": {
           "readOnly": true,
@@ -2289,6 +2312,7 @@
       }
     },
     "CertificateBaseProperties": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "thumbprintAlgorithm": {
           "type": "string",
@@ -2316,6 +2340,7 @@
       }
     },
     "CertificateProperties": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "provisioningState": {
           "type": "string",
@@ -2380,6 +2405,7 @@
       "description": "Certificate properties."
     },
     "CertificateCreateOrUpdateProperties": {
+      "discriminator": ["2017-09-01"],
       "allOf": [
         {
           "$ref": "#/definitions/CertificateBaseProperties"
@@ -2401,6 +2427,7 @@
       "required": [ "data" ]
     },
     "Certificate": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
@@ -2416,6 +2443,7 @@
       "description": "Contains information about a certificate."
     },
     "CertificateCreateOrUpdateParameters": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
@@ -2431,6 +2459,7 @@
       "description": "Contains information about a certificate."
     },
     "ListCertificatesResult": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "value": {
           "type": "array",
@@ -2447,6 +2476,7 @@
       "description": "Values returned by the List operation."
     },
     "DeleteCertificateError": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "code": {
           "type": "string",
@@ -2472,6 +2502,7 @@
       "description": "An error response from the Batch service."
     },
     "Pool": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
@@ -2487,6 +2518,7 @@
       "description": "Contains information about a pool."
     },
     "PoolProperties": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "displayName": {
           "type": "string",
@@ -2658,6 +2690,7 @@
       "description": "Pool properties."
     },
     "DeploymentConfiguration": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "cloudServiceConfiguration": {
           "$ref": "#/definitions/CloudServiceConfiguration",
@@ -2673,6 +2706,7 @@
       "title": "Deployment configuration properties."
     },
     "ScaleSettings": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "fixedScale": {
           "$ref": "#/definitions/FixedScaleSettings",
@@ -2689,6 +2723,7 @@
       "description": "Defines the desired size of the pool. This can either be 'fixedScale' where the requested targetDedicatedNodes is specified, or 'autoScale' which defines a formula which is periodically reevaluated. If this property is not specified, the pool will have a fixed scale with 0 targetDedicatedNodes."
     },
     "AutoScaleSettings": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "formula": {
           "type": "string",
@@ -2709,6 +2744,7 @@
       "title": "AutoScale settings for the pool."
     },
     "FixedScaleSettings": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "resizeTimeout": {
           "type": "string",
@@ -2737,6 +2773,7 @@
       "title": "Fixed scale settings for the pool."
     },
     "ComputeNodeDeallocationOption": {
+      "discriminator": ["2017-09-01"],
       "type": "string",
       "title": "Determines what to do with a node and its running task(s) after it has been selected for deallocation.",
       "description": "Values are:\n\n Requeue - Terminate running tasks and requeue them. The tasks will run again when the job is enabled. Remove nodes as soon as tasks have been terminated.\n Terminate - Terminate running tasks. The tasks will not run again. Remove nodes as soon as tasks have been terminated.\n TaskCompletion - Allow currently running tasks to complete. Schedule no new tasks while waiting. Remove nodes when all tasks have completed.\n RetainedData - Allow currently running tasks to complete, then wait for all task data retention periods to expire. Schedule no new tasks while waiting. Remove nodes when all task retention periods have expired.",
@@ -2752,6 +2789,7 @@
       }
     },
     "CertificateReference": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "id": {
           "type": "string",
@@ -2798,6 +2836,7 @@
       "title": "A reference to a certificate to be installed on compute nodes in a pool. This must exist inside the same account as the pool."
     },
     "ApplicationPackageReference": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "id": {
           "type": "string",
@@ -2813,6 +2852,7 @@
       "required": [ "id" ]
     },
     "ResizeError": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "code": {
           "type": "string",
@@ -2834,6 +2874,7 @@
       "required": [ "code", "message" ]
     },
     "AutoScaleRunError": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "code": {
           "type": "string",
@@ -2855,6 +2896,7 @@
       "required": [ "code", "message" ]
     },
     "AutoScaleRun": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "evaluationTime": {
           "type": "string",
@@ -2875,6 +2917,7 @@
       "title": "The results and errors from an execution of a pool autoscale formula."
     },
     "VirtualMachineConfiguration": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "imageReference": {
           "$ref": "#/definitions/ImageReference",
@@ -2912,6 +2955,7 @@
       "title": "The configuration for compute nodes in a pool based on the Azure Virtual Machines infrastructure."
     },
     "WindowsConfiguration": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "enableAutomaticUpdates": {
           "type": "boolean",
@@ -2922,6 +2966,7 @@
       "title": "Windows operating system settings to apply to the virtual machine."
     },
     "ImageReference": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "publisher": {
           "type": "string",
@@ -2952,6 +2997,7 @@
       "title": "A reference to an Azure Virtual Machines Marketplace image or the Azure Image resource of a custom Virtual Machine. To get the list of all imageReferences verified by Azure Batch, see the 'List supported node agent SKUs' operation."
     },
     "DataDisk": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "lun": {
           "type": "integer",
@@ -2982,6 +3028,7 @@
       "description": "Data Disk settings which will be used by the data disks associated to Compute Nodes in the pool."
     },
     "TaskSchedulingPolicy": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "nodeFillType": {
           "type": "string",
@@ -3000,6 +3047,7 @@
       "title": "Specifies how tasks should be distributed across compute nodes."
     },
     "LinuxUserConfiguration": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "uid": {
           "type": "integer",
@@ -3022,6 +3070,7 @@
       "title": "Properties used to create a user account on a Linux node."
     },
     "UserAccount": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "name": {
           "type": "string",
@@ -3046,6 +3095,7 @@
       "title": "Properties used to create a user on an Azure Batch node."
     },
     "StartTask": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "commandLine": {
           "type": "string",
@@ -3086,6 +3136,7 @@
       "title": "A task which is run when a compute node joins a pool in the Azure Batch service, or when the compute node is rebooted or reimaged."
     },
     "ResourceFile": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "blobSource": {
           "type": "string",
@@ -3106,6 +3157,7 @@
       "title": "A file to be downloaded from Azure blob storage to a compute node."
     },
     "EnvironmentSetting": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "name": {
           "type": "string",
@@ -3120,6 +3172,7 @@
       "title": "An environment variable to be set on a task process."
     },
     "UserIdentity": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "userName": {
           "type": "string",
@@ -3136,6 +3189,7 @@
       "description": "Specify either the userName or autoUser property, but not both."
     },
     "AutoUserSpecification": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "scope": {
           "type": "string",
@@ -3159,6 +3213,7 @@
       "title": "Specifies the parameters for the auto user that runs a task on the Batch service."
     },
     "ElevationLevel": {
+      "discriminator": ["2017-09-01"],
       "type": "string",
       "title": "The elevation level of the user.",
       "description": "Values are:\n\n NonAdmin - The user is a standard user without elevated access.\n Admin - The user is a user with elevated access and operates with full Administrator permissions.",
@@ -3172,6 +3227,7 @@
       }
     },
     "StorageAccountType": {
+      "discriminator": ["2017-09-01"],
       "type": "string",
       "title": "The storage account type for use in creating data disks.",
       "enum": [
@@ -3184,6 +3240,7 @@
       }
     },
     "CachingType": {
+      "discriminator": ["2017-09-01"],
       "type": "string",
       "title": "The type of caching to enable for the disk.",
       "description": "Values are:\n\n None - The caching mode for the disk is not enabled.\n ReadOnly - The caching mode for the disk is read only.\n ReadWrite - The caching mode for the disk is read and write. For information about the caching options see: https://blogs.msdn.microsoft.com/windowsazurestorage/2012/06/27/exploring-windows-azure-drives-disks-and-images/.",
@@ -3198,6 +3255,7 @@
       }
     },
     "OSDisk": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "caching": {
           "$ref": "#/definitions/CachingType",
@@ -3208,6 +3266,7 @@
       "title": "Settings for the operating system disk of the virtual machine."
     },
     "NetworkConfiguration": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "subnetId": {
           "type": "string",
@@ -3227,6 +3286,7 @@
       "description": "The network configuration for a pool."
     },
     "CloudServiceConfiguration": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "osFamily": {
           "type": "string",
@@ -3248,6 +3308,7 @@
       "title": "The configuration for nodes in a pool based on the Azure Cloud Services platform."
     },
     "MetadataItem": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "name": {
           "type": "string",
@@ -3263,6 +3324,7 @@
       "description": "The Batch service does not assign any meaning to this metadata; it is solely for the use of user code."
     },
     "ResizeOperationStatus": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "targetDedicatedNodes": {
           "type": "integer",
@@ -3303,6 +3365,7 @@
       "description": "Describes either the current operation (if the pool AllocationState is Resizing) or the previously completed operation (if the AllocationState is Steady)."
     },
     "PoolEndpointConfiguration": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "inboundNatPools": {
           "type": "array",
@@ -3317,6 +3380,7 @@
       "title": "The endpoint configuration for a pool."
     },
     "InboundNatPool": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "name": {
           "type": "string",
@@ -3366,6 +3430,7 @@
       "title": "A inbound NAT pool that can be used to address specific ports on compute nodes in a Batch pool externally."
     },
     "NetworkSecurityGroupRule": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "priority": {
           "type": "integer",
@@ -3395,6 +3460,7 @@
       "title": "A network security group rule to apply to an inbound endpoint."
     },
     "ListPoolsResult": {
+      "discriminator": ["2017-09-01"],
       "properties": {
         "value": {
           "type": "array",
@@ -3582,6 +3648,28 @@
       ]
     },
     "ResourceGroupNameParameter": {
+      "description": "The name of the resource group that contains the Batch account.",
+      "oneOf": [
+        {
+          "discriminator": ["2017-09-01"],
+          "name": "resourceGroupName",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        {
+          "discriminator": ["2017-05-01"],
+          "name": "resourceGroupName",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[-\\w\\._]+$",
+          "x-ms-parameter-location": "method"
+        }
+      ]
+    },
+    "ResourceGroupNameParameter02": {
       "name": "resourceGroupName",
       "in": "path",
       "required": true,
@@ -3601,6 +3689,7 @@
       "x-ms-parameter-location": "method"
     },
     "CertificateNameParameter": {
+      "discriminator": ["2017-09-01"],
       "name": "certificateName",
       "in": "path",
       "required": true,
@@ -3612,6 +3701,7 @@
       "x-ms-parameter-location": "method"
     },
     "PoolNameParameter": {
+      "discriminator": ["2017-09-01"],
       "name": "poolName",
       "in": "path",
       "required": true,
