@@ -179,8 +179,8 @@ export function main(): void {
     const pathItemPlus: oaPlus.PathItem = {
         get: [operationA, operationB]
     }
-    // const pathItem: openApi.PathItem = pathItemPlus
-    const oaPlusMain: oaPlus.Main = {
+    // const pathItem: oa.PathItem = pathItemPlus
+    const oaPlusMain: oa.Main = {
         swagger: "2.0",
         info: {
             title: "Test",
