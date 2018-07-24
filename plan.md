@@ -52,3 +52,14 @@ Currently, almost all Azure OpenAPI specifications are OpenAPI 2.0. There is no 
 ```
 
 See also [JSON-Schema. Enumerated Values](https://spacetelescope.github.io/understanding-json-schema/reference/generic.html#enumerated-values).
+
+## Questions
+
+1. `Discriminator` should have all values
+   ```json
+   "discriminator": {
+       "name": "api-version",
+       "enum": ["2013-05", "2013-06"]
+   }
+   ```
+2. Should we rename `Operations` to `OperationOverload`?
