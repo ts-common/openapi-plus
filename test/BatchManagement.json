@@ -1369,7 +1369,7 @@
             "$ref": "#/parameters/CertificateNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/ApiVersionParameter02"
           },
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1438,7 +1438,7 @@
             "description": "OData filter expression. Valid properties for filtering are:\n\n name\n properties/allocationState\n properties/allocationStateTransitionTime\n properties/creationTime\n properties/provisioningState\n properties/provisioningStateTransitionTime\n properties/lastModified\n properties/vmSize\n properties/interNodeCommunication\n properties/scaleSettings/autoScale\n properties/scaleSettings/fixedScale"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/ApiVersionParameter02"
           },
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1482,7 +1482,7 @@
             "$ref": "#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/AccountNameParameter"
+            "$ref": "#/parameters/AccountNameParameter02"
           },
           {
             "$ref": "#/parameters/PoolNameParameter"
@@ -1578,7 +1578,7 @@
             "description": "The entity state (ETag) version of the pool to update. This value can be omitted or set to \"*\" to apply the operation unconditionally."
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/ApiVersionParameter02"
           },
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1625,7 +1625,7 @@
             "$ref": "#/parameters/PoolNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/ApiVersionParameter02"
           },
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1681,7 +1681,7 @@
             "$ref": "#/parameters/PoolNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/ApiVersionParameter02"
           },
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1730,7 +1730,7 @@
             "$ref": "#/parameters/PoolNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/ApiVersionParameter02"
           },
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1780,7 +1780,7 @@
             "$ref": "#/parameters/PoolNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/ApiVersionParameter02"
           },
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
