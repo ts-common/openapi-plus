@@ -69,8 +69,8 @@ function getOperation(
     const parameterEnum = getParameterEnum(parameter)
     if (parameterEnum === undefined) {
         // the discriminator parameter is not an enumeration
-        // TODO: it should be an error.
-        return undefined
+        // TODO: we may have an error/warning in this case
+        return operation
     }
 
     if (_.find(parameterEnum, v => v === value) === undefined) {
@@ -78,8 +78,38 @@ function getOperation(
         return undefined
     }
 
+    const id = <K extends keyof oa.Operation>(k: K) => operation[k]
+    const parametersFactory = () => parameters.map(p => {
+        const pName = getParameterName(p)
+        if (pName === name) {
+            const pEnum = getParameterEnum(p)
+            if (pEnum !== undefined) {
+                // TODO: apply a property set factory.
+                // Should it be applied on a resolved parameter object (no $ref)?
+                return {
+                    name: pName,
+                    enum: [value]
+                }
+            }
+        }
+        return p
+    })
+    const factory: ps.PropertySetFactory<oa.Operation> = {
+        tags: id,
+        summary: id,
+        description: id,
+        externalDocs: id,
+        operationId: id,
+        produces: id,
+        consumes: id,
+        parameters: parametersFactory,
+        responses: id,
+        schemes: id,
+        deprecated: id,
+        security: id
+    }
     // TODO: a discriminator parameter should have only one value. we need to remove all other values
-    return operation
+    return ps.propertySet(factory)
 }
 
 function convertOperations(
@@ -165,7 +195,7 @@ export function convert(source: oaPlus.Main): sm.StringMap<oa.Main> {
     } else {
         const enumValues = getParameterEnum(discriminatorParameter)
         if (enumValues === undefined) {
-            // TODO: error
+            // TODO: report an error
             return { default: convertOpenApi({}, source) }
         } else {
             const name = getParameterName(discriminatorParameter)

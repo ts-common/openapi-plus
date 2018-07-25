@@ -43,21 +43,28 @@ describe("test", () => {
                 version: "0",
             },
             discriminator: {
-                name: "ud",
-                enum: ["1", "2"],
+                name: "api-version",
+                enum: ["2016", "2017", "2018"],
             },
             paths: {
                 "/path": {
                     get: {
                         operationId: "",
-                        parameters: [],
+                        parameters: [
+                            {
+                                name: "api-version",
+                                type: "string",
+                            }
+                        ],
                         responses: {},
                     },
                     put: {
                         operationId: "",
                         parameters: [
                             {
-                                name: "ud"
+                                name: "api-version",
+                                type: "string",
+                                enum: ["2017", "2018"]
                             }
                         ],
                         responses: {},
