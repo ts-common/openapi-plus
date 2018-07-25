@@ -3,6 +3,16 @@ import * as oaPlus from "./openApiPlus"
 import * as sm from "@ts-common/string-map"
 import * as _ from "@ts-common/iterator"
 import * as tuple from "@ts-common/tuple"
+import * as ps from "@ts-common/property-set"
+
+type OptionalProperties<T> = {
+    readonly [K in keyof T]+?: T[K]
+}
+
+function isJsonReference<T>(v: oa.JsonReference|T): v is oa.JsonReference {
+    const o: OptionalProperties<oa.JsonReference> = v
+    return o.$ref !== undefined
+}
 
 /**
  * Returns a name of the given parameter
@@ -12,7 +22,10 @@ import * as tuple from "@ts-common/tuple"
  * - the given parameter can have a `$ref`.
  * - the function should never return `undefined`
  */
-function getParameterName(parameter: oa.Parameter): string|undefined {
+function getParameterName(parameter: oa.Parameter|oa.JsonReference): string|undefined {
+    if (isJsonReference(parameter)) {
+        return undefined
+    }
     return parameter.name
 }
 
@@ -22,13 +35,160 @@ function getParameterName(parameter: oa.Parameter): string|undefined {
  *
  * TODO: the given parameter can have a `$ref` or a `schema`. The `schema` may have a `$ref` as well.
  */
-function getParameterEnum(parameter: oa.Parameter): ReadonlyArray<string>|undefined {
+function getParameterEnum(parameter: oa.Parameter|oa.JsonReference): ReadonlyArray<string>|undefined {
+    if (isJsonReference(parameter)) {
+        return undefined
+    }
+    if (parameter.in === "body") {
+        return undefined
+    }
     return parameter.enum
 }
 
 interface Discriminator {
-    readonly name: string
-    readonly value: string
+    readonly name?: string
+    readonly value?: string
+}
+
+function isBodyParameter(parameter: oa.Parameter): parameter is oa.BodyParameter {
+    return parameter.in === "body"
+}
+
+function isPathParameter(parameter: oa.NonBodyParameter): parameter is oa.PathParameterSubSchema {
+    return parameter.in === "path"
+}
+
+function isHeaderParameter(parameter: oa.NonBodyParameter): parameter is oa.HeaderParameterSubSchema {
+    return parameter.in === "header"
+}
+
+function isQueryParameter(parameter: oa.NonBodyParameter): parameter is oa.QueryParameterSubSchema {
+    return parameter.in === "query"
+}
+
+function copyPropertyFactory<T>(value: T): <K extends keyof T>(k: K) => T[K] {
+    return (k) => value[k]
+}
+
+function getDiscriminatorParameter(discriminatorValue: string, parameter: oa.Parameter) {
+    if (isBodyParameter(parameter)) {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            // TODO: should we fix schema to support `enum`?
+            schema: copy
+        }
+        return ps.propertySet(factory)
+    } else if (isPathParameter(parameter)) {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            type: copy,
+            format: copy,
+            items: copy,
+            collectionFormat: copy,
+            default: copy,
+            maximum: copy,
+            exclusiveMaximum: copy,
+            minimum: copy,
+            exclusiveMinimum: copy,
+            maxLength: copy,
+            minLength: copy,
+            pattern: copy,
+            maxItems: copy,
+            minItems: copy,
+            uniqueItems: copy,
+            enum: () => [ discriminatorValue ],
+            multipleOf: copy,
+        }
+        return ps.propertySet(factory)
+    } else if (isQueryParameter(parameter)) {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            type: copy,
+            format: copy,
+            items: copy,
+            collectionFormat: copy,
+            default: copy,
+            maximum: copy,
+            exclusiveMaximum: copy,
+            minimum: copy,
+            exclusiveMinimum: copy,
+            maxLength: copy,
+            minLength: copy,
+            pattern: copy,
+            maxItems: copy,
+            minItems: copy,
+            uniqueItems: copy,
+            enum: () => [ discriminatorValue ],
+            multipleOf: copy,
+            allowEmptyValue: copy
+        }
+        return ps.propertySet(factory)
+    } else if (isHeaderParameter(parameter)) {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            type: copy,
+            format: copy,
+            items: copy,
+            collectionFormat: copy,
+            default: copy,
+            maximum: copy,
+            exclusiveMaximum: copy,
+            minimum: copy,
+            exclusiveMinimum: copy,
+            maxLength: copy,
+            minLength: copy,
+            pattern: copy,
+            maxItems: copy,
+            minItems: copy,
+            uniqueItems: copy,
+            enum: () => [ discriminatorValue ],
+            multipleOf: copy,
+        }
+        return ps.propertySet(factory)
+    } else {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            type: copy,
+            format: copy,
+            items: copy,
+            collectionFormat: copy,
+            default: copy,
+            maximum: copy,
+            exclusiveMaximum: copy,
+            minimum: copy,
+            exclusiveMinimum: copy,
+            maxLength: copy,
+            minLength: copy,
+            pattern: copy,
+            maxItems: copy,
+            minItems: copy,
+            uniqueItems: copy,
+            enum: () => [ discriminatorValue ],
+            multipleOf: copy,
+            allowEmptyValue: copy
+        }
+        return ps.propertySet(factory)
+    }
 }
 
 function getOperation(
@@ -38,28 +198,56 @@ function getOperation(
 
     if (parameters === undefined) {
         // operation has no parameters
-        return undefined
+        return operation
     }
 
     const parameter = _.find(parameters, p => getParameterName(p) === name)
     if (parameter === undefined) {
         // operation has no discriminator parameter
-        return undefined
+        return operation
     }
 
     const parameterEnum = getParameterEnum(parameter)
     if (parameterEnum === undefined) {
         // the discriminator parameter is not an enumeration
-        return undefined
+        // TODO: we may have an error/warning in this case
+        return operation
     }
 
-    if (!_.find(parameterEnum, v => v === value)) {
+    if (_.find(parameterEnum, v => v === value) === undefined) {
         // the operation is not compatible with the given discriminator value.
         return undefined
     }
 
-    // TODO: a discriminator parameter should have only one value.
-    return operation
+    const copy = copyPropertyFactory(operation)
+    const parametersFactory = () => parameters.map(p => {
+        const pName = getParameterName(p)
+        if (value !== undefined && pName === name) {
+            const pEnum = getParameterEnum(p)
+            if (pEnum !== undefined) {
+                // TODO: apply a property set factory.
+                // Should it be applied on a resolved parameter object (no $ref)?
+                return getDiscriminatorParameter(value, parameter as oa.Parameter)
+            }
+        }
+        return p
+    })
+    const factory: ps.PropertySetFactory<oa.Operation> = {
+        tags: copy,
+        summary: copy,
+        description: copy,
+        externalDocs: copy,
+        operationId: copy,
+        produces: copy,
+        consumes: copy,
+        parameters: parametersFactory,
+        responses: copy,
+        schemes: copy,
+        deprecated: copy,
+        security: copy
+    }
+    // TODO: a discriminator parameter should have only one value. we need to remove all other values
+    return ps.propertySet(factory)
 }
 
 function convertOperations(
@@ -88,8 +276,23 @@ function convertPathItem(
             ? tuple.tuple2(method, convertOperations(discriminator, operations))
             : undefined
     })
-    // TODO: we need to use propertyMap to properly clone the object.
-    return sm.stringMap(result)
+    const operationFactory = (key: Method) => {
+        const operations = pathItem[key]
+        return operations === undefined ? undefined : convertOperations(discriminator, operations)
+    }
+    const copy = copyPropertyFactory(pathItem)
+    const factory: ps.PropertySetFactory<oa.PathItem> = {
+        $ref: copy,
+        get: operationFactory,
+        put: operationFactory,
+        post: operationFactory,
+        delete: operationFactory,
+        options: operationFactory,
+        head: operationFactory,
+        patch: operationFactory,
+        parameters: copy
+    }
+    return ps.propertySet(factory)
 }
 
 function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Paths {
@@ -97,56 +300,47 @@ function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Path
     const result = _.map(
         entries,
         ([path, pathItem]) => sm.entry(path, convertPathItem(discriminator, pathItem)))
-    // TODO: we need to use propertyMap to properly clone the object.
     return sm.stringMap(result)
 }
 
 function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.Main {
-    // TODO: we need to use propertyMap to properly clone the object.
-    return {
-        swagger: source.swagger,
-        info: source.info,
-        paths: convertPath(discriminator, source.paths),
+    const copy = copyPropertyFactory(source)
+    const pathsFactory = () => convertPath(discriminator, source.paths)
+    const factory: ps.PropertySetFactory<oa.Main> = {
+        swagger: () => "2.0",
+        info: copy,
+        host: copy,
+        basePath: copy,
+        schemes: copy,
+        consumes: copy,
+        produces: copy,
+        paths: pathsFactory,
+        definitions: copy,
+        parameters: copy,
+        responses: copy,
+        security: copy,
+        securityDefinitions: copy,
+        tags: copy,
+        externalDocs: copy
     }
+    return ps.propertySet(factory)
 }
 
-/**
- * The main function.
- */
-export function main(): void {
-    const operationA: oaPlus.Operation = {
-        operationId: "a",
-        parameters: [
-            {
-                name: "api-version",
-                enum: ["2015-01-01"]
-            }
-        ],
-        responses: {}
-    }
-    const operationB: oaPlus.Operation = {
-        operationId: "b",
-        parameters: [
-            {
-                name: "api-version",
-                enum: ["2015-02-01"]
-            }
-        ],
-        responses: {}
-    }
-    const pathItemPlus: oaPlus.PathItem = {
-        get: [operationA, operationB]
-    }
-    // const pathItem: openApi.PathItem = pathItemPlus
-    const oaPlusMain: oaPlus.Main = {
-        swagger: "2.0",
-        info: {
-            title: "Test",
-            version: "1.0"
-        },
-        paths: {
-            "somePath/sss": pathItemPlus
+export function convert(source: oaPlus.Main): sm.StringMap<oa.Main> {
+    const discriminatorParameter = source.discriminator
+    if (discriminatorParameter === undefined) {
+        return { default: convertOpenApi({}, source) }
+    } else {
+        const enumValues = getParameterEnum(discriminatorParameter)
+        if (enumValues === undefined) {
+            // TODO: report an error
+            return { default: convertOpenApi({}, source) }
+        } else {
+            const name = getParameterName(discriminatorParameter)
+            const entries = _.map(
+                enumValues,
+                value => sm.entry(value, convertOpenApi({ name, value }, source)))
+            return sm.stringMap(entries)
         }
     }
-    const oaMain: oa.Main = oaPlusMain
 }

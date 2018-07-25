@@ -18,7 +18,7 @@
     "swagger": {
       "type": "string",
       "enum": [
-        "2.0+"
+        "2.0"
       ],
       "description": "The Swagger version of this document."
     },
@@ -54,9 +54,6 @@
     },
     "parameters": {
       "$ref": "#/definitions/parameterDefinitions"
-    },
-    "discriminator": {
-      "$ref": "#/definitions/parameter"
     },
     "responses": {
       "$ref": "#/definitions/responseDefinitions"
@@ -287,18 +284,6 @@
         }
       }
     },
-    "operations": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/operation"
-        },
-        {
-          "items": {
-            "$ref": "#/definitions/operation"
-          }
-        }
-      ]
-    },
     "pathItem": {
       "type": "object",
       "additionalProperties": false,
@@ -312,25 +297,25 @@
           "type": "string"
         },
         "get": {
-          "$ref": "#/definitions/operations"
+          "$ref": "#/definitions/operation"
         },
         "put": {
-          "$ref": "#/definitions/operations"
+          "$ref": "#/definitions/operation"
         },
         "post": {
-          "$ref": "#/definitions/operations"
+          "$ref": "#/definitions/operation"
         },
         "delete": {
-          "$ref": "#/definitions/operations"
+          "$ref": "#/definitions/operation"
         },
         "options": {
-          "$ref": "#/definitions/operations"
+          "$ref": "#/definitions/operation"
         },
         "head": {
-          "$ref": "#/definitions/operations"
+          "$ref": "#/definitions/operation"
         },
         "patch": {
-          "$ref": "#/definitions/operations"
+          "$ref": "#/definitions/operation"
         },
         "parameters": {
           "$ref": "#/definitions/parametersList"
