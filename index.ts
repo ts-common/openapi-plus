@@ -50,6 +50,147 @@ interface Discriminator {
     readonly value?: string
 }
 
+function isBodyParameter(parameter: oa.Parameter): parameter is oa.BodyParameter {
+    return parameter.in === "body"
+}
+
+function isPathParameter(parameter: oa.NonBodyParameter): parameter is oa.PathParameterSubSchema {
+    return parameter.in === "path"
+}
+
+function isHeaderParameter(parameter: oa.NonBodyParameter): parameter is oa.HeaderParameterSubSchema {
+    return parameter.in === "header"
+}
+
+function isQueryParameter(parameter: oa.NonBodyParameter): parameter is oa.QueryParameterSubSchema {
+    return parameter.in === "query"
+}
+
+function copyPropertyFactory<T>(value: T): <K extends keyof T>(k: K) => T[K] {
+    return (k) => value[k]
+}
+
+function getDiscriminatorParameter(discriminatorValue: string, parameter: oa.Parameter) {
+    if (isBodyParameter(parameter)) {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            // TODO: should we fix schema to support `enum`?
+            schema: copy
+        }
+        return ps.propertySet(factory)
+    } else if (isPathParameter(parameter)) {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            type: copy,
+            format: copy,
+            items: copy,
+            collectionFormat: copy,
+            default: copy,
+            maximum: copy,
+            exclusiveMaximum: copy,
+            minimum: copy,
+            exclusiveMinimum: copy,
+            maxLength: copy,
+            minLength: copy,
+            pattern: copy,
+            maxItems: copy,
+            minItems: copy,
+            uniqueItems: copy,
+            enum: () => [ discriminatorValue ],
+            multipleOf: copy,
+        }
+        return ps.propertySet(factory)
+    } else if (isQueryParameter(parameter)) {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            type: copy,
+            format: copy,
+            items: copy,
+            collectionFormat: copy,
+            default: copy,
+            maximum: copy,
+            exclusiveMaximum: copy,
+            minimum: copy,
+            exclusiveMinimum: copy,
+            maxLength: copy,
+            minLength: copy,
+            pattern: copy,
+            maxItems: copy,
+            minItems: copy,
+            uniqueItems: copy,
+            enum: () => [ discriminatorValue ],
+            multipleOf: copy,
+            allowEmptyValue: copy
+        }
+        return ps.propertySet(factory)
+    } else if (isHeaderParameter(parameter)) {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            type: copy,
+            format: copy,
+            items: copy,
+            collectionFormat: copy,
+            default: copy,
+            maximum: copy,
+            exclusiveMaximum: copy,
+            minimum: copy,
+            exclusiveMinimum: copy,
+            maxLength: copy,
+            minLength: copy,
+            pattern: copy,
+            maxItems: copy,
+            minItems: copy,
+            uniqueItems: copy,
+            enum: () => [ discriminatorValue ],
+            multipleOf: copy,
+        }
+        return ps.propertySet(factory)
+    } else {
+        const copy = copyPropertyFactory(parameter)
+        const factory: ps.PropertySetFactory<typeof parameter> = {
+            required: copy,
+            in: copy,
+            description: copy,
+            name: copy,
+            type: copy,
+            format: copy,
+            items: copy,
+            collectionFormat: copy,
+            default: copy,
+            maximum: copy,
+            exclusiveMaximum: copy,
+            minimum: copy,
+            exclusiveMinimum: copy,
+            maxLength: copy,
+            minLength: copy,
+            pattern: copy,
+            maxItems: copy,
+            minItems: copy,
+            uniqueItems: copy,
+            enum: () => [ discriminatorValue ],
+            multipleOf: copy,
+            allowEmptyValue: copy
+        }
+        return ps.propertySet(factory)
+    }
+}
+
 function getOperation(
     { name, value }: Discriminator, operation: oa.Operation
 ): oa.Operation|undefined {
@@ -78,35 +219,32 @@ function getOperation(
         return undefined
     }
 
-    const id = <K extends keyof oa.Operation>(k: K) => operation[k]
+    const copy = copyPropertyFactory(operation)
     const parametersFactory = () => parameters.map(p => {
         const pName = getParameterName(p)
-        if (pName === name) {
+        if (value !== undefined && pName === name) {
             const pEnum = getParameterEnum(p)
             if (pEnum !== undefined) {
                 // TODO: apply a property set factory.
                 // Should it be applied on a resolved parameter object (no $ref)?
-                return {
-                    name: pName,
-                    enum: [value]
-                }
+                return getDiscriminatorParameter(value, parameter as oa.Parameter)
             }
         }
         return p
     })
     const factory: ps.PropertySetFactory<oa.Operation> = {
-        tags: id,
-        summary: id,
-        description: id,
-        externalDocs: id,
-        operationId: id,
-        produces: id,
-        consumes: id,
+        tags: copy,
+        summary: copy,
+        description: copy,
+        externalDocs: copy,
+        operationId: copy,
+        produces: copy,
+        consumes: copy,
         parameters: parametersFactory,
-        responses: id,
-        schemes: id,
-        deprecated: id,
-        security: id
+        responses: copy,
+        schemes: copy,
+        deprecated: copy,
+        security: copy
     }
     // TODO: a discriminator parameter should have only one value. we need to remove all other values
     return ps.propertySet(factory)
@@ -138,21 +276,21 @@ function convertPathItem(
             ? tuple.tuple2(method, convertOperations(discriminator, operations))
             : undefined
     })
-    const co = (key: Method) => {
+    const operationFactory = (key: Method) => {
         const operations = pathItem[key]
         return operations === undefined ? undefined : convertOperations(discriminator, operations)
     }
-    const id = <K extends keyof oaPlus.PathItem>(k: K) => pathItem[k]
+    const copy = copyPropertyFactory(pathItem)
     const factory: ps.PropertySetFactory<oa.PathItem> = {
-        $ref: id,
-        get: co,
-        put: co,
-        post: co,
-        delete: co,
-        options: co,
-        head: co,
-        patch: co,
-        parameters: id
+        $ref: copy,
+        get: operationFactory,
+        put: operationFactory,
+        post: operationFactory,
+        delete: operationFactory,
+        options: operationFactory,
+        head: operationFactory,
+        patch: operationFactory,
+        parameters: copy
     }
     return ps.propertySet(factory)
 }
@@ -166,24 +304,24 @@ function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Path
 }
 
 function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.Main {
-    const id = <K extends keyof oaPlus.Main>(k: K) => source[k]
-    const cp = (k: "paths") => convertPath(discriminator, source.paths)
+    const copy = copyPropertyFactory(source)
+    const pathsFactory = () => convertPath(discriminator, source.paths)
     const factory: ps.PropertySetFactory<oa.Main> = {
         swagger: () => "2.0",
-        info: id,
-        host: id,
-        basePath: id,
-        schemes: id,
-        consumes: id,
-        produces: id,
-        paths: cp,
-        definitions: id,
-        parameters: id,
-        responses: id,
-        security: id,
-        securityDefinitions: id,
-        tags: id,
-        externalDocs: id
+        info: copy,
+        host: copy,
+        basePath: copy,
+        schemes: copy,
+        consumes: copy,
+        produces: copy,
+        paths: pathsFactory,
+        definitions: copy,
+        parameters: copy,
+        responses: copy,
+        security: copy,
+        securityDefinitions: copy,
+        tags: copy,
+        externalDocs: copy
     }
     return ps.propertySet(factory)
 }
