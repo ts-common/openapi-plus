@@ -5,8 +5,13 @@ import * as _ from "@ts-common/iterator"
 import * as tuple from "@ts-common/tuple"
 import * as ps from "@ts-common/property-set"
 
+type OptionalProperties<T> = {
+    readonly [K in keyof T]+?: T[K]
+}
+
 function isJsonReference<T>(v: oa.JsonReference|T): v is oa.JsonReference {
-    return (v as oa.JsonReference).$ref !== undefined
+    const o: OptionalProperties<oa.JsonReference> = v
+    return o.$ref !== undefined
 }
 
 /**
@@ -41,8 +46,8 @@ function getParameterEnum(parameter: oa.Parameter|oa.JsonReference): ReadonlyArr
 }
 
 interface Discriminator {
-    readonly name: string
-    readonly value: string
+    readonly name?: string
+    readonly value?: string
 }
 
 function getOperation(
@@ -52,27 +57,28 @@ function getOperation(
 
     if (parameters === undefined) {
         // operation has no parameters
-        return undefined
+        return operation
     }
 
     const parameter = _.find(parameters, p => getParameterName(p) === name)
     if (parameter === undefined) {
         // operation has no discriminator parameter
-        return undefined
+        return operation
     }
 
     const parameterEnum = getParameterEnum(parameter)
     if (parameterEnum === undefined) {
         // the discriminator parameter is not an enumeration
+        // TODO: it should be an error.
         return undefined
     }
 
-    if (!_.find(parameterEnum, v => v === value)) {
+    if (_.find(parameterEnum, v => v === value) === undefined) {
         // the operation is not compatible with the given discriminator value.
         return undefined
     }
 
-    // TODO: a discriminator parameter should have only one value.
+    // TODO: a discriminator parameter should have only one value. we need to remove all other values
     return operation
 }
 
@@ -133,7 +139,7 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
     const id = <K extends keyof oaPlus.Main>(k: K) => source[k]
     const cp = (k: "paths") => convertPath(discriminator, source.paths)
     const factory: ps.PropertySetFactory<oa.Main> = {
-        swagger: id,
+        swagger: () => "2.0",
         info: id,
         host: id,
         basePath: id,
@@ -150,4 +156,23 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
         externalDocs: id
     }
     return ps.propertySet(factory)
+}
+
+export function convert(source: oaPlus.Main): sm.StringMap<oa.Main> {
+    const discriminatorParameter = source.discriminator
+    if (discriminatorParameter === undefined) {
+        return { default: convertOpenApi({}, source) }
+    } else {
+        const enumValues = getParameterEnum(discriminatorParameter)
+        if (enumValues === undefined) {
+            // TODO: error
+            return { default: convertOpenApi({}, source) }
+        } else {
+            const name = getParameterName(discriminatorParameter)
+            const entries = _.map(
+                enumValues,
+                value => sm.entry(value, convertOpenApi({ name, value }, source)))
+            return sm.stringMap(entries)
+        }
+    }
 }

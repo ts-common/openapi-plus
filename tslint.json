@@ -16,6 +16,9 @@
         "newline-before-return": false,
         "interface-name": false,
 
+        "completed-docs": false,
+        "no-unsafe-any": false,
+
         "interface-over-type-literal": false,
         "type-literal-delimiter": false,
         "member-ordering": false,

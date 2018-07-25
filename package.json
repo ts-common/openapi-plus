@@ -8,7 +8,7 @@
     "tslint": "tslint --project .",
     "test": "tsc && npm run tslint && nyc mocha",
     "schema": "schema2ts openApi && schema2ts openApiPlus",
-    "prepack": "npm install && npm run schema && tsc"
+    "prepack": "npm run schema && npm install && npm run schema && tsc"
   },
   "repository": {
     "type": "git",

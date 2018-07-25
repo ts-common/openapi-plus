@@ -18,7 +18,7 @@
     "swagger": {
       "type": "string",
       "enum": [
-        "2.0"
+        "2.0+"
       ],
       "description": "The Swagger version of this document."
     },
@@ -170,9 +170,6 @@
       "type": "object",
       "description": "Relative paths to the individual endpoints. They must be relative to the 'basePath'.",
       "patternProperties": {
-        "^x-": {
-          "$ref": "#/definitions/vendorExtension"
-        },
         "^/": {
           "$ref": "#/definitions/pathItem"
         }
