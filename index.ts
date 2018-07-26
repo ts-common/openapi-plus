@@ -2,7 +2,6 @@ import * as oa from "./openApi"
 import * as oaPlus from "./openApiPlus"
 import * as sm from "@ts-common/string-map"
 import * as _ from "@ts-common/iterator"
-import * as tuple from "@ts-common/tuple"
 import * as ps from "@ts-common/property-set"
 
 type OptionalProperties<T> = {
@@ -59,27 +58,31 @@ function getDiscriminatorParameter(discriminatorValue: string, parameter: oa.Par
     }
 }
 
-function getOperation(
-    { name, value }: Discriminator, operation: oa.Operation
-): oa.Operation|undefined {
-    const parameters = operation.parameters
+interface DiscriminatorParameters {
+    readonly parameters: ReadonlyArray<oa.Parameter|oa.JsonReference>|undefined
+}
+
+function getParameters(
+    { name, value }: Discriminator, parameters: ReadonlyArray<oa.Parameter|oa.JsonReference>|undefined
+): DiscriminatorParameters|undefined {
 
     if (parameters === undefined) {
-        // operation has no parameters
-        return operation
+        // no parameters
+        return { parameters }
     }
 
     const parameter = _.find(parameters, p => getParameterName(p) === name)
     if (parameter === undefined) {
-        // operation has no discriminator parameter
-        return operation
+        // no discriminator parameter
+        return { parameters }
     }
 
     const parameterEnum = getParameterEnum(parameter)
     if (parameterEnum === undefined) {
         // the discriminator parameter is not an enumeration
         // TODO: we may have an error/warning in this case
-        return operation
+        // TODO: narrow the parameter
+        return { parameters }
     }
 
     if (_.find(parameterEnum, v => v === value) === undefined) {
@@ -87,8 +90,7 @@ function getOperation(
         return undefined
     }
 
-    const copy = ps.copyProperty(operation)
-    const parametersFactory = () => parameters.map(p => {
+    const result = parameters.map(p => {
         const pName = getParameterName(p)
         if (value !== undefined && pName === name) {
             const pEnum = getParameterEnum(p)
@@ -100,6 +102,21 @@ function getOperation(
         }
         return p
     })
+
+    return { parameters: result }
+}
+
+function getOperation(
+    discriminator: Discriminator, operation: oa.Operation
+): oa.Operation|undefined {
+
+    const discriminatorParameters = getParameters(discriminator, operation.parameters)
+
+    if (discriminatorParameters === undefined) {
+        return undefined
+    }
+
+    const copy = ps.copyProperty(operation)
     return ps.create<oa.Operation>({
         tags: copy,
         summary: copy,
@@ -108,7 +125,7 @@ function getOperation(
         operationId: copy,
         produces: copy,
         consumes: copy,
-        parameters: parametersFactory,
+        parameters: () => discriminatorParameters.parameters,
         responses: copy,
         schemes: copy,
         deprecated: copy,
