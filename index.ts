@@ -72,122 +72,10 @@ function copyPropertyFactory<T>(value: T): <K extends keyof T>(k: K) => T[K] {
 
 function getDiscriminatorParameter(discriminatorValue: string, parameter: oa.Parameter) {
     if (isBodyParameter(parameter)) {
-        const copy = copyPropertyFactory(parameter)
-        const factory: ps.PropertySetFactory<typeof parameter> = {
-            required: copy,
-            in: copy,
-            description: copy,
-            name: copy,
-            // TODO: should we fix schema to support `enum`?
-            schema: copy
-        }
-        return ps.propertySet(factory)
-    } else if (isPathParameter(parameter)) {
-        const copy = copyPropertyFactory(parameter)
-        const factory: ps.PropertySetFactory<typeof parameter> = {
-            required: copy,
-            in: copy,
-            description: copy,
-            name: copy,
-            type: copy,
-            format: copy,
-            items: copy,
-            collectionFormat: copy,
-            default: copy,
-            maximum: copy,
-            exclusiveMaximum: copy,
-            minimum: copy,
-            exclusiveMinimum: copy,
-            maxLength: copy,
-            minLength: copy,
-            pattern: copy,
-            maxItems: copy,
-            minItems: copy,
-            uniqueItems: copy,
-            enum: () => [ discriminatorValue ],
-            multipleOf: copy,
-        }
-        return ps.propertySet(factory)
-    } else if (isQueryParameter(parameter)) {
-        const copy = copyPropertyFactory(parameter)
-        const factory: ps.PropertySetFactory<typeof parameter> = {
-            required: copy,
-            in: copy,
-            description: copy,
-            name: copy,
-            type: copy,
-            format: copy,
-            items: copy,
-            collectionFormat: copy,
-            default: copy,
-            maximum: copy,
-            exclusiveMaximum: copy,
-            minimum: copy,
-            exclusiveMinimum: copy,
-            maxLength: copy,
-            minLength: copy,
-            pattern: copy,
-            maxItems: copy,
-            minItems: copy,
-            uniqueItems: copy,
-            enum: () => [ discriminatorValue ],
-            multipleOf: copy,
-            allowEmptyValue: copy
-        }
-        return ps.propertySet(factory)
-    } else if (isHeaderParameter(parameter)) {
-        const copy = copyPropertyFactory(parameter)
-        const factory: ps.PropertySetFactory<typeof parameter> = {
-            required: copy,
-            in: copy,
-            description: copy,
-            name: copy,
-            type: copy,
-            format: copy,
-            items: copy,
-            collectionFormat: copy,
-            default: copy,
-            maximum: copy,
-            exclusiveMaximum: copy,
-            minimum: copy,
-            exclusiveMinimum: copy,
-            maxLength: copy,
-            minLength: copy,
-            pattern: copy,
-            maxItems: copy,
-            minItems: copy,
-            uniqueItems: copy,
-            enum: () => [ discriminatorValue ],
-            multipleOf: copy,
-        }
-        return ps.propertySet(factory)
+        // TODO: should we fix schema to support `enum`?
+        return parameter
     } else {
-        const copy = copyPropertyFactory(parameter)
-        const factory: ps.PropertySetFactory<typeof parameter> = {
-            required: copy,
-            in: copy,
-            description: copy,
-            name: copy,
-            type: copy,
-            format: copy,
-            items: copy,
-            collectionFormat: copy,
-            default: copy,
-            maximum: copy,
-            exclusiveMaximum: copy,
-            minimum: copy,
-            exclusiveMinimum: copy,
-            maxLength: copy,
-            minLength: copy,
-            pattern: copy,
-            maxItems: copy,
-            minItems: copy,
-            uniqueItems: copy,
-            enum: () => [ discriminatorValue ],
-            multipleOf: copy,
-            allowEmptyValue: copy
-        }
-        return ps.propertySet(factory)
+        return ps.copyCreate(parameter, { enum: () => [discriminatorValue] })
     }
 }
 
@@ -232,7 +120,7 @@ function getOperation(
         }
         return p
     })
-    const factory: ps.PropertySetFactory<oa.Operation> = {
+    const factory: ps.Factory<oa.Operation> = {
         tags: copy,
         summary: copy,
         description: copy,
@@ -246,8 +134,7 @@ function getOperation(
         deprecated: copy,
         security: copy
     }
-    // TODO: a discriminator parameter should have only one value. we need to remove all other values
-    return ps.propertySet(factory)
+    return ps.create(factory)
 }
 
 function convertOperations(
@@ -281,7 +168,7 @@ function convertPathItem(
         return operations === undefined ? undefined : convertOperations(discriminator, operations)
     }
     const copy = copyPropertyFactory(pathItem)
-    const factory: ps.PropertySetFactory<oa.PathItem> = {
+    const factory: ps.Factory<oa.PathItem> = {
         $ref: copy,
         get: operationFactory,
         put: operationFactory,
@@ -292,7 +179,7 @@ function convertPathItem(
         patch: operationFactory,
         parameters: copy
     }
-    return ps.propertySet(factory)
+    return ps.create(factory)
 }
 
 function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Paths {
@@ -306,7 +193,7 @@ function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Path
 function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.Main {
     const copy = copyPropertyFactory(source)
     const pathsFactory = () => convertPath(discriminator, source.paths)
-    const factory: ps.PropertySetFactory<oa.Main> = {
+    const factory: ps.Factory<oa.Main> = {
         swagger: () => "2.0",
         info: copy,
         host: copy,
@@ -323,7 +210,7 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
         tags: copy,
         externalDocs: copy
     }
-    return ps.propertySet(factory)
+    return ps.create(factory)
 }
 
 export function convert(source: oaPlus.Main): sm.StringMap<oa.Main> {

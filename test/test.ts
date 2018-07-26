@@ -44,6 +44,8 @@ describe("test", () => {
             },
             discriminator: {
                 name: "api-version",
+                in: "query",
+                type: "string",
                 enum: ["2016", "2017", "2018"],
             },
             paths: {
@@ -52,6 +54,7 @@ describe("test", () => {
                         operationId: "",
                         parameters: [
                             {
+                                in: "query",
                                 name: "api-version",
                                 type: "string",
                             }
@@ -62,6 +65,7 @@ describe("test", () => {
                         operationId: "",
                         parameters: [
                             {
+                                in: "query",
                                 name: "api-version",
                                 type: "string",
                                 enum: ["2017", "2018"]
