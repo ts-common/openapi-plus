@@ -11,7 +11,7 @@ describe("test", () => {
             },
             paths: {},
         }
-        const result = openApiPlus.convert(source)
+        const result = openApiPlus.convert(source, "api-version")
         // tslint:disable-next-line:no-console
         console.log(result)
     })
@@ -31,7 +31,7 @@ describe("test", () => {
                 }
             },
         }
-        const result = openApiPlus.convert(source)
+        const result = openApiPlus.convert(source, "api-version")
         // tslint:disable-next-line:no-console
         console.log(JSON.stringify(result))
     })
@@ -42,11 +42,13 @@ describe("test", () => {
                 title: "something",
                 version: "0",
             },
-            discriminator: {
-                name: "api-version",
-                in: "query",
-                type: "string",
-                enum: ["2016", "2017", "2018"],
+            parameters: {
+                allApiVersions: {
+                    name: "api-version",
+                    in: "query",
+                    type: "string",
+                    enum: ["2016", "2017", "2018"],
+                }
             },
             paths: {
                 "/path": {
@@ -76,7 +78,7 @@ describe("test", () => {
                 }
             },
         }
-        const result = openApiPlus.convert(source)
+        const result = openApiPlus.convert(source, "api-version")
         // tslint:disable-next-line:no-console
         console.log(JSON.stringify(result))
     })
@@ -87,11 +89,13 @@ describe("test", () => {
                 title: "something",
                 version: "0"
             },
-            discriminator: {
-                name: "api-version",
-                in: "query",
-                type: "string",
-                enum: ["2016", "2017"],
+            parameters: {
+                allApiVersion: {
+                    name: "api-version",
+                    in: "query",
+                    type: "string",
+                    enum: ["2016", "2017"],
+                }
             },
             paths: {
                 "/path": {
@@ -110,7 +114,7 @@ describe("test", () => {
                 }
             },
         }
-        const result = openApiPlus.convert(source)
+        const result = openApiPlus.convert(source, "api-version")
         // tslint:disable-next-line:no-console
         console.log(JSON.stringify(result))
     })

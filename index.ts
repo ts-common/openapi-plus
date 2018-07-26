@@ -211,11 +211,15 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
     })
 }
 
-export function convert(source: oaPlus.Main): sm.StringMap<oa.Main> {
-    const discriminatorParameter = source.discriminator
-    if (discriminatorParameter === undefined) {
+export function convert(source: oaPlus.Main, discriminator: string): sm.StringMap<oa.Main> {
+    const parameters = source.parameters
+    const discriminatorParameterEntry = parameters === undefined
+        ? undefined
+        : _.find(sm.entries(parameters), ([, p]) => p.name === discriminator)
+    if (discriminatorParameterEntry === undefined) {
         return { default: convertOpenApi({}, source) }
     } else {
+        const discriminatorParameter = discriminatorParameterEntry[1]
         const enumValues = getParameterEnum(discriminatorParameter)
         if (enumValues === undefined) {
             // TODO: report an error
