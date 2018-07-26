@@ -14,21 +14,6 @@ function isJsonReference<T>(v: oa.JsonReference|T): v is oa.JsonReference {
 }
 
 /**
- * Returns a name of the given parameter
- * @param parameter an OpenAPI parameter.
- *
- * TODO:
- * - the given parameter can have a `$ref`.
- * - the function should never return `undefined`
- */
-function getParameterName(parameter: oa.Parameter|oa.JsonReference): string|undefined {
-    if (isJsonReference(parameter)) {
-        return undefined
-    }
-    return parameter.name
-}
-
-/**
  * Returns an enum of the given parameter.
  * @param parameter an OpenAPI parameter
  *
@@ -245,7 +230,7 @@ export function convert(source: oaPlus.Main, discriminator: string): sm.StringMa
             // TODO: report an error
             return { default: convertOpenApi({}, source) }
         } else {
-            const name = getParameterName(discriminatorParameter)
+            const name = discriminatorParameter.name
             const entries = _.map(
                 enumValues,
                 value => sm.entry(value, convertOpenApi({ name, value }, source)))
