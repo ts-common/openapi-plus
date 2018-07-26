@@ -55,9 +55,6 @@
     "parameters": {
       "$ref": "#/definitions/parameterDefinitions"
     },
-    "discriminator": {
-      "$ref": "#/definitions/parameter"
-    },
     "responses": {
       "$ref": "#/definitions/responseDefinitions"
     },

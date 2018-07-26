@@ -34,13 +34,12 @@ function getParameterName(parameter: oa.Parameter|oa.JsonReference): string|unde
  *
  * TODO: the given parameter can have a `$ref` or a `schema`. The `schema` may have a `$ref` as well.
  */
-function getParameterEnum(parameter: oa.Parameter|oa.JsonReference): ReadonlyArray<string>|undefined {
-    if (isJsonReference(parameter)) {
-        return undefined
-    }
+function getParameterEnum(parameter: oa.Parameter): ReadonlyArray<string>|undefined {
     if (parameter.in === "body") {
+        // TODO: we may need to get it from `schema`.
         return undefined
     }
+    // TODO: we may need to get it from `schema` as well.
     return parameter.enum
 }
 
@@ -68,12 +67,8 @@ function optional<T>(value: T): Optional<T> {
     return { value }
 }
 
-type Parameter = oa.Parameter|oa.JsonReference
-
-function getOptionalParameter(
-    { name, value }: Discriminator, parameter: Parameter
-): Optional<Parameter> {
-    const pName = getParameterName(parameter)
+function getOptionalParameter({ name, value }: Discriminator, parameter: oa.Parameter): oa.Parameter|undefined {
+    const pName = parameter.name
     if (value !== undefined && pName === name) {
         const pEnum = getParameterEnum(parameter)
         if (pEnum !== undefined) {
@@ -81,15 +76,26 @@ function getOptionalParameter(
                 // the operation is not compatible with the given discriminator value.
                 return undefined
             }
-            // TODO: apply a property set factory.
-            // Should it be applied on a resolved parameter object (no $ref)?
-            return optional(getDiscriminatorParameter(value, parameter as oa.Parameter))
+            return getDiscriminatorParameter(value, parameter)
         }
         // the discriminator parameter is not an enumeration
         // TODO: we may have an error/warning in this case
         // TODO: narrow the parameter
     }
-    return optional(parameter)
+    return parameter
+}
+
+type ParameterOrRef = oa.Parameter|oa.JsonReference
+
+function getOptionalParameterOrRef(
+    discriminator: Discriminator, parameter: ParameterOrRef
+): ParameterOrRef|undefined {
+    if (isJsonReference(parameter)) {
+        // TODO: extract parameter from reference. We need to return `undefined` only if the
+        // referenced parameter has no possible values
+        return parameter
+    }
+    return getOptionalParameter(discriminator, parameter)
 }
 
 // Parameter Objects
@@ -103,13 +109,13 @@ function getOptionalParameters(
         return optional(parameters)
     }
 
-    const result: Parameter[] = []
-    for (const parameter of parameters) {
-        const optionalParameter = getOptionalParameter(discriminator, parameter)
-        if (optionalParameter === undefined) {
+    const result: ParameterOrRef[] = []
+    for (const p of parameters) {
+        const op = getOptionalParameterOrRef(discriminator, p)
+        if (op === undefined) {
             return undefined
         }
-        result.push(optionalParameter.value)
+        result.push(op)
     }
 
     return optional(result)
@@ -190,6 +196,20 @@ function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Path
     return sm.stringMap(result)
 }
 
+function convertParameterDefinitions(
+    discriminator: Discriminator, source: oa.ParameterDefinitions|undefined
+): oa.ParameterDefinitions|undefined {
+    if (source === undefined) {
+        return undefined
+    }
+    const entries = sm.entries(source)
+    const result = _.filterMap(entries, ([name, def]) => {
+        const defResult = getOptionalParameter(discriminator, def)
+        return defResult === undefined ? undefined : sm.entry(name, defResult)
+    })
+    return sm.stringMap(result)
+}
+
 function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.Main {
     const copy = ps.copyProperty(source)
     return ps.create<oa.Main>({
@@ -202,7 +222,7 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
         produces: copy,
         paths: () => convertPath(discriminator, source.paths),
         definitions: copy,
-        parameters: copy,
+        parameters: () => convertParameterDefinitions(discriminator, source.parameters),
         responses: copy,
         security: copy,
         securityDefinitions: copy,
@@ -211,11 +231,15 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
     })
 }
 
-export function convert(source: oaPlus.Main): sm.StringMap<oa.Main> {
-    const discriminatorParameter = source.discriminator
-    if (discriminatorParameter === undefined) {
+export function convert(source: oaPlus.Main, discriminator: string): sm.StringMap<oa.Main> {
+    const parameters = source.parameters
+    const discriminatorParameterEntry = parameters === undefined
+        ? undefined
+        : _.find(sm.entries(parameters), ([, p]) => p.name === discriminator)
+    if (discriminatorParameterEntry === undefined) {
         return { default: convertOpenApi({}, source) }
     } else {
+        const discriminatorParameter = discriminatorParameterEntry[1]
         const enumValues = getParameterEnum(discriminatorParameter)
         if (enumValues === undefined) {
             // TODO: report an error
