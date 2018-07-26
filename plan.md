@@ -63,3 +63,11 @@ See also [JSON-Schema. Enumerated Values](https://spacetelescope.github.io/under
    }
    ```
 2. Should we rename `Operations` to `OperationOverload`?
+
+## Presentation Feedback
+
+1. GitHub project url
+   1. accepting proposals/feedbacks
+1. operation example
+   1. a webpage which can show generated files. Interactive?
+1. Vision/RoadMap for features
