@@ -50,28 +50,8 @@ interface Discriminator {
     readonly value?: string
 }
 
-function isBodyParameter(parameter: oa.Parameter): parameter is oa.BodyParameter {
-    return parameter.in === "body"
-}
-
-function isPathParameter(parameter: oa.NonBodyParameter): parameter is oa.PathParameterSubSchema {
-    return parameter.in === "path"
-}
-
-function isHeaderParameter(parameter: oa.NonBodyParameter): parameter is oa.HeaderParameterSubSchema {
-    return parameter.in === "header"
-}
-
-function isQueryParameter(parameter: oa.NonBodyParameter): parameter is oa.QueryParameterSubSchema {
-    return parameter.in === "query"
-}
-
-function copyPropertyFactory<T>(value: T): <K extends keyof T>(k: K) => T[K] {
-    return (k) => value[k]
-}
-
 function getDiscriminatorParameter(discriminatorValue: string, parameter: oa.Parameter) {
-    if (isBodyParameter(parameter)) {
+    if (parameter.in === "body") {
         // TODO: should we fix schema to support `enum`?
         return parameter
     } else {
@@ -107,7 +87,7 @@ function getOperation(
         return undefined
     }
 
-    const copy = copyPropertyFactory(operation)
+    const copy = ps.copyProperty(operation)
     const parametersFactory = () => parameters.map(p => {
         const pName = getParameterName(p)
         if (value !== undefined && pName === name) {
@@ -120,7 +100,7 @@ function getOperation(
         }
         return p
     })
-    const factory: ps.Factory<oa.Operation> = {
+    return ps.create<oa.Operation>({
         tags: copy,
         summary: copy,
         description: copy,
@@ -133,8 +113,7 @@ function getOperation(
         schemes: copy,
         deprecated: copy,
         security: copy
-    }
-    return ps.create(factory)
+    })
 }
 
 function convertOperations(
@@ -150,25 +129,17 @@ function convertOperations(
 
 type Method = "get"|"put"|"post"|"delete"|"options"|"head"|"patch"
 
-const methods: ReadonlyArray<Method> = ["get", "put", "post", "delete", "options", "head", "patch"]
-
 function convertPathItem(
     discriminator: Discriminator,
     pathItem: oaPlus.PathItem
 ): oa.PathItem {
     // TODO: resolve `pathItem.$ref`.
-    const result = _.filterMap(methods, method => {
-        const operations = pathItem[method]
-        return operations !== undefined
-            ? tuple.tuple2(method, convertOperations(discriminator, operations))
-            : undefined
-    })
     const operationFactory = (key: Method) => {
         const operations = pathItem[key]
         return operations === undefined ? undefined : convertOperations(discriminator, operations)
     }
-    const copy = copyPropertyFactory(pathItem)
-    const factory: ps.Factory<oa.PathItem> = {
+    const copy = ps.copyProperty(pathItem)
+    return ps.create<oa.PathItem>({
         $ref: copy,
         get: operationFactory,
         put: operationFactory,
@@ -178,8 +149,7 @@ function convertPathItem(
         head: operationFactory,
         patch: operationFactory,
         parameters: copy
-    }
-    return ps.create(factory)
+    })
 }
 
 function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Paths {
@@ -191,9 +161,8 @@ function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Path
 }
 
 function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.Main {
-    const copy = copyPropertyFactory(source)
-    const pathsFactory = () => convertPath(discriminator, source.paths)
-    const factory: ps.Factory<oa.Main> = {
+    const copy = ps.copyProperty(source)
+    return ps.create<oa.Main>({
         swagger: () => "2.0",
         info: copy,
         host: copy,
@@ -201,7 +170,7 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
         schemes: copy,
         consumes: copy,
         produces: copy,
-        paths: pathsFactory,
+        paths: () => convertPath(discriminator, source.paths),
         definitions: copy,
         parameters: copy,
         responses: copy,
@@ -209,8 +178,7 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
         securityDefinitions: copy,
         tags: copy,
         externalDocs: copy
-    }
-    return ps.create(factory)
+    })
 }
 
 export function convert(source: oaPlus.Main): sm.StringMap<oa.Main> {
