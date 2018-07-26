@@ -35,7 +35,7 @@ describe("test", () => {
         // tslint:disable-next-line:no-console
         console.log(JSON.stringify(result))
     })
-    it("noChanges", () => {
+    it("two versions", () => {
         const source: oaPlus.Main = {
             swagger: "2.0+",
             info: {
@@ -73,6 +73,40 @@ describe("test", () => {
                         ],
                         responses: {},
                     }
+                }
+            },
+        }
+        const result = openApiPlus.convert(source)
+        // tslint:disable-next-line:no-console
+        console.log(JSON.stringify(result))
+    })
+    it("pathItem parameters", () => {
+        const source: oaPlus.Main = {
+            swagger: "2.0+",
+            info: {
+                title: "something",
+                version: "0"
+            },
+            discriminator: {
+                name: "api-version",
+                in: "query",
+                type: "string",
+                enum: ["2016", "2017"],
+            },
+            paths: {
+                "/path": {
+                    get: {
+                        operationId: "",
+                        responses: {}
+                    },
+                    parameters: [
+                        {
+                            in: "query",
+                            name: "api-version",
+                            type: "string",
+                            enum: ["2017"]
+                        }
+                    ],
                 }
             },
         }

@@ -58,13 +58,15 @@ function getDiscriminatorParameter(discriminatorValue: string, parameter: oa.Par
     }
 }
 
-interface DiscriminatorParameters {
+interface ParametersOrNever {
     readonly parameters: ReadonlyArray<oa.Parameter|oa.JsonReference>|undefined
 }
 
-function getParameters(
+// Parameter Objects
+// See also https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
+function getParametersOrNever(
     { name, value }: Discriminator, parameters: ReadonlyArray<oa.Parameter|oa.JsonReference>|undefined
-): DiscriminatorParameters|undefined {
+): ParametersOrNever|undefined {
 
     if (parameters === undefined) {
         // no parameters
@@ -110,7 +112,7 @@ function getOperation(
     discriminator: Discriminator, operation: oa.Operation
 ): oa.Operation|undefined {
 
-    const discriminatorParameters = getParameters(discriminator, operation.parameters)
+    const discriminatorParameters = getParametersOrNever(discriminator, operation.parameters)
 
     if (discriminatorParameters === undefined) {
         return undefined
@@ -149,7 +151,11 @@ type Method = "get"|"put"|"post"|"delete"|"options"|"head"|"patch"
 function convertPathItem(
     discriminator: Discriminator,
     pathItem: oaPlus.PathItem
-): oa.PathItem {
+): oa.PathItem|undefined {
+    const parameters = getParametersOrNever(discriminator, pathItem.parameters)
+    if (parameters === undefined) {
+        return undefined
+    }
     // TODO: resolve `pathItem.$ref`.
     const operationFactory = (key: Method) => {
         const operations = pathItem[key]
@@ -165,7 +171,7 @@ function convertPathItem(
         options: operationFactory,
         head: operationFactory,
         patch: operationFactory,
-        parameters: copy
+        parameters: () => parameters.parameters
     })
 }
 
