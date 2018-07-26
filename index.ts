@@ -58,63 +58,70 @@ function getDiscriminatorParameter(discriminatorValue: string, parameter: oa.Par
     }
 }
 
-interface ParametersOrNever {
-    readonly parameters: ReadonlyArray<oa.Parameter|oa.JsonReference>|undefined
+type ParameterArray = ReadonlyArray<oa.Parameter|oa.JsonReference>|undefined
+
+type Optional<T> = {
+    readonly value: T
+}|undefined
+
+function optional<T>(value: T): Optional<T> {
+    return { value }
+}
+
+type Parameter = oa.Parameter|oa.JsonReference
+
+function getOptionalParameter(
+    { name, value }: Discriminator, parameter: Parameter
+): Optional<Parameter> {
+    const pName = getParameterName(parameter)
+    if (value !== undefined && pName === name) {
+        const pEnum = getParameterEnum(parameter)
+        if (pEnum !== undefined) {
+            if (_.find(pEnum, v => v === value) === undefined) {
+                // the operation is not compatible with the given discriminator value.
+                return undefined
+            }
+            // TODO: apply a property set factory.
+            // Should it be applied on a resolved parameter object (no $ref)?
+            return optional(getDiscriminatorParameter(value, parameter as oa.Parameter))
+        }
+        // the discriminator parameter is not an enumeration
+        // TODO: we may have an error/warning in this case
+        // TODO: narrow the parameter
+    }
+    return optional(parameter)
 }
 
 // Parameter Objects
 // See also https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
-function getParametersOrNever(
-    { name, value }: Discriminator, parameters: ReadonlyArray<oa.Parameter|oa.JsonReference>|undefined
-): ParametersOrNever|undefined {
+function getOptionalParameters(
+    discriminator: Discriminator, parameters: ParameterArray
+): Optional<ParameterArray> {
 
     if (parameters === undefined) {
         // no parameters
-        return { parameters }
+        return optional(parameters)
     }
 
-    const parameter = _.find(parameters, p => getParameterName(p) === name)
-    if (parameter === undefined) {
-        // no discriminator parameter
-        return { parameters }
-    }
-
-    const parameterEnum = getParameterEnum(parameter)
-    if (parameterEnum === undefined) {
-        // the discriminator parameter is not an enumeration
-        // TODO: we may have an error/warning in this case
-        // TODO: narrow the parameter
-        return { parameters }
-    }
-
-    if (_.find(parameterEnum, v => v === value) === undefined) {
-        // the operation is not compatible with the given discriminator value.
-        return undefined
-    }
-
-    const result = parameters.map(p => {
-        const pName = getParameterName(p)
-        if (value !== undefined && pName === name) {
-            const pEnum = getParameterEnum(p)
-            if (pEnum !== undefined) {
-                // TODO: apply a property set factory.
-                // Should it be applied on a resolved parameter object (no $ref)?
-                return getDiscriminatorParameter(value, parameter as oa.Parameter)
-            }
+    const result: Parameter[] = []
+    for (const parameter of parameters) {
+        const optionalParameter = getOptionalParameter(discriminator, parameter)
+        if (optionalParameter === undefined) {
+            return undefined
         }
-        return p
-    })
+        result.push(optionalParameter.value)
+    }
 
-    return { parameters: result }
+    return optional(result)
 }
 
 function getOperation(
     discriminator: Discriminator, operation: oa.Operation
 ): oa.Operation|undefined {
 
-    const discriminatorParameters = getParametersOrNever(discriminator, operation.parameters)
+    const optionalParameters = getOptionalParameters(discriminator, operation.parameters)
 
-    if (discriminatorParameters === undefined) {
+    if (optionalParameters === undefined) {
         return undefined
     }
 
@@ -127,7 +134,7 @@ function getOperation(
         operationId: copy,
         produces: copy,
         consumes: copy,
-        parameters: () => discriminatorParameters.parameters,
+        parameters: () => optionalParameters.value,
         responses: copy,
         schemes: copy,
         deprecated: copy,
@@ -152,7 +159,7 @@ function convertPathItem(
     discriminator: Discriminator,
     pathItem: oaPlus.PathItem
 ): oa.PathItem|undefined {
-    const parameters = getParametersOrNever(discriminator, pathItem.parameters)
+    const parameters = getOptionalParameters(discriminator, pathItem.parameters)
     if (parameters === undefined) {
         return undefined
     }
@@ -171,7 +178,7 @@ function convertPathItem(
         options: operationFactory,
         head: operationFactory,
         patch: operationFactory,
-        parameters: () => parameters.parameters
+        parameters: () => parameters.value
     })
 }
 
