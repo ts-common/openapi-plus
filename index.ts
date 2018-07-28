@@ -14,21 +14,6 @@ function isJsonReference<T>(v: oa.JsonReference|T): v is oa.JsonReference {
 }
 
 /**
- * Returns a name of the given parameter
- * @param parameter an OpenAPI parameter.
- *
- * TODO:
- * - the given parameter can have a `$ref`.
- * - the function should never return `undefined`
- */
-function getParameterName(parameter: oa.Parameter|oa.JsonReference): string|undefined {
-    if (isJsonReference(parameter)) {
-        return undefined
-    }
-    return parameter.name
-}
-
-/**
  * Returns an enum of the given parameter.
  * @param parameter an OpenAPI parameter
  *
@@ -43,9 +28,43 @@ function getParameterEnum(parameter: oa.Parameter): ReadonlyArray<string>|undefi
     return parameter.enum
 }
 
-interface Discriminator {
-    readonly name?: string
-    readonly value?: string
+interface Context {
+    readonly source: oaPlus.Main
+    readonly discriminatorName?: string
+    readonly discriminatorValue?: string
+}
+
+interface Tracked<T> {
+    readonly value: T
+    readonly name: string
+}
+
+function tracked<K extends keyof oaPlus.Main>(source: oaPlus.Main, k: K): Tracked<oaPlus.Main[K]> {
+    return { value: source[k], name: k }
+}
+
+function resolve<T>(t: Tracked<sm.StringMap<T|undefined>|undefined>, ref: oaPlus.JsonReference): T|undefined {
+    const value = t.value
+    if (value === undefined) {
+        // error
+        return undefined
+    }
+    const split = ref.$ref.split("/")
+    // tslint:disable-next-line:no-magic-numbers
+    if (split.length !== 3) {
+        // error
+        return undefined
+    }
+    if (split[0] !== "#") {
+        // error
+        return undefined
+    }
+    if (split[1] !== t.name) {
+        // error
+        return undefined
+    }
+    // tslint:disable-next-line:no-magic-numbers
+    return value[split[2]]
 }
 
 function getDiscriminatorParameter(discriminatorValue: string, parameter: oa.Parameter) {
@@ -67,16 +86,16 @@ function optional<T>(value: T): Optional<T> {
     return { value }
 }
 
-function getOptionalParameter({ name, value }: Discriminator, parameter: oa.Parameter): oa.Parameter|undefined {
+function getOptionalParameter({ discriminatorName, discriminatorValue }: Context, parameter: oa.Parameter): oa.Parameter|undefined {
     const pName = parameter.name
-    if (value !== undefined && pName === name) {
+    if (discriminatorValue !== undefined && pName === discriminatorName) {
         const pEnum = getParameterEnum(parameter)
         if (pEnum !== undefined) {
-            if (_.find(pEnum, v => v === value) === undefined) {
+            if (_.find(pEnum, v => v === discriminatorValue) === undefined) {
                 // the operation is not compatible with the given discriminator value.
                 return undefined
             }
-            return getDiscriminatorParameter(value, parameter)
+            return getDiscriminatorParameter(discriminatorValue, parameter)
         }
         // the discriminator parameter is not an enumeration
         // TODO: we may have an error/warning in this case
@@ -88,12 +107,19 @@ function getOptionalParameter({ name, value }: Discriminator, parameter: oa.Para
 type ParameterOrRef = oa.Parameter|oa.JsonReference
 
 function getOptionalParameterOrRef(
-    discriminator: Discriminator, parameter: ParameterOrRef
+    discriminator: Context, parameter: ParameterOrRef
 ): ParameterOrRef|undefined {
     if (isJsonReference(parameter)) {
+        const t = tracked(discriminator.source, "parameters")
+        const p = resolve(t, parameter)
+        if (p === undefined) {
+            // can't resolve the parameter.
+            return undefined
+        }
+        const op = getOptionalParameter(discriminator, p)
         // TODO: extract parameter from reference. We need to return `undefined` only if the
         // referenced parameter has no possible values
-        return parameter
+        return op === undefined ? undefined : parameter
     }
     return getOptionalParameter(discriminator, parameter)
 }
@@ -101,7 +127,7 @@ function getOptionalParameterOrRef(
 // Parameter Objects
 // See also https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
 function getOptionalParameters(
-    discriminator: Discriminator, parameters: ParameterArray
+    discriminator: Context, parameters: ParameterArray
 ): Optional<ParameterArray> {
 
     if (parameters === undefined) {
@@ -122,7 +148,7 @@ function getOptionalParameters(
 }
 
 function getOperation(
-    discriminator: Discriminator, operation: oa.Operation
+    discriminator: Context, operation: oa.Operation
 ): oa.Operation|undefined {
 
     const optionalParameters = getOptionalParameters(discriminator, operation.parameters)
@@ -149,7 +175,7 @@ function getOperation(
 }
 
 function convertOperations(
-    discriminator: Discriminator,
+    discriminator: Context,
     operations: oaPlus.Operations,
 ): oa.Operation|undefined {
     const operationArray = _.isArray(operations) ? operations : [operations]
@@ -162,7 +188,7 @@ function convertOperations(
 type Method = "get"|"put"|"post"|"delete"|"options"|"head"|"patch"
 
 function convertPathItem(
-    discriminator: Discriminator,
+    discriminator: Context,
     pathItem: oaPlus.PathItem
 ): oa.PathItem|undefined {
     const parameters = getOptionalParameters(discriminator, pathItem.parameters)
@@ -188,7 +214,7 @@ function convertPathItem(
     })
 }
 
-function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Paths {
+function convertPath(discriminator: Context, paths: oaPlus.Paths): oa.Paths {
     const entries = sm.entries(paths)
     const result = _.map(
         entries,
@@ -197,7 +223,7 @@ function convertPath(discriminator: Discriminator, paths: oaPlus.Paths): oa.Path
 }
 
 function convertParameterDefinitions(
-    discriminator: Discriminator, source: oa.ParameterDefinitions|undefined
+    discriminator: Context, source: oa.ParameterDefinitions|undefined
 ): oa.ParameterDefinitions|undefined {
     if (source === undefined) {
         return undefined
@@ -210,7 +236,8 @@ function convertParameterDefinitions(
     return sm.stringMap(result)
 }
 
-function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.Main {
+function convertOpenApi(context: Context): oa.Main {
+    const source = context.source
     const copy = ps.copyProperty(source)
     return ps.create<oa.Main>({
         swagger: () => "2.0",
@@ -220,9 +247,9 @@ function convertOpenApi(discriminator: Discriminator, source: oaPlus.Main): oa.M
         schemes: copy,
         consumes: copy,
         produces: copy,
-        paths: () => convertPath(discriminator, source.paths),
+        paths: () => convertPath(context, source.paths),
         definitions: copy,
-        parameters: () => convertParameterDefinitions(discriminator, source.parameters),
+        parameters: () => convertParameterDefinitions(context, source.parameters),
         responses: copy,
         security: copy,
         securityDefinitions: copy,
@@ -237,18 +264,26 @@ export function convert(source: oaPlus.Main, discriminator: string): sm.StringMa
         ? undefined
         : _.find(sm.entries(parameters), ([, p]) => p.name === discriminator)
     if (discriminatorParameterEntry === undefined) {
-        return { default: convertOpenApi({}, source) }
+        return { default: convertOpenApi({ source }) }
     } else {
         const discriminatorParameter = discriminatorParameterEntry[1]
         const enumValues = getParameterEnum(discriminatorParameter)
         if (enumValues === undefined) {
             // TODO: report an error
-            return { default: convertOpenApi({}, source) }
+            return { default: convertOpenApi({ source }) }
         } else {
-            const name = getParameterName(discriminatorParameter)
+            const name = discriminatorParameter.name
             const entries = _.map(
                 enumValues,
-                value => sm.entry(value, convertOpenApi({ name, value }, source)))
+                value => sm.entry(
+                    value,
+                    convertOpenApi({
+                        source,
+                        discriminatorName: name,
+                        discriminatorValue: value
+                    })
+                )
+            )
             return sm.stringMap(entries)
         }
     }

@@ -35,7 +35,7 @@ describe("test", () => {
         // tslint:disable-next-line:no-console
         console.log(JSON.stringify(result))
     })
-    it("two versions", () => {
+    it("three versions", () => {
         const source: oaPlus.Main = {
             swagger: "2.0+",
             info: {
@@ -111,6 +111,54 @@ describe("test", () => {
                             enum: ["2017"]
                         }
                     ],
+                }
+            },
+        }
+        const result = openApiPlus.convert(source, "api-version")
+        // tslint:disable-next-line:no-console
+        console.log(JSON.stringify(result))
+    })
+    it("parameter reference", () => {
+        const source: oaPlus.Main = {
+            swagger: "2.0+",
+            info: {
+                title: "something",
+                version: "0",
+            },
+            parameters: {
+                allApiVersions: {
+                    name: "api-version",
+                    in: "query",
+                    type: "string",
+                    enum: ["2016", "2017", "2018"],
+                },
+                apiVersionFrom2017: {
+                    name: "api-version",
+                    in: "query",
+                    type: "string",
+                    enum: ["2017", "2018"],
+                },
+            },
+            paths: {
+                "/path": {
+                    get: {
+                        operationId: "",
+                        parameters: [
+                            {
+                                $ref: "#/parameters/allApiVersions"
+                            }
+                        ],
+                        responses: {},
+                    },
+                    put: {
+                        operationId: "",
+                        parameters: [
+                            {
+                                $ref: "#/parameters/apiVersionFrom2017"
+                            }
+                        ],
+                        responses: {},
+                    }
                 }
             },
         }
