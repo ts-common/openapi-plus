@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@ts-common/iterator": "0.0.30",
-    "@ts-common/property-set": "0.0.4",
+    "@ts-common/property-set": "0.0.5",
     "@ts-common/schema": "0.0.2",
     "@ts-common/string-map": "0.0.5",
     "@ts-common/tuple": "0.0.0"
