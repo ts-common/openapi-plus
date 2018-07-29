@@ -43,7 +43,10 @@ function tracked<K extends keyof oaPlus.Main>(source: oaPlus.Main, k: K): Tracke
     return { value: source[k], name: k }
 }
 
-function resolve<T>(t: Tracked<sm.StringMap<T|undefined>|undefined>, ref: oaPlus.JsonReference): T|undefined {
+function resolve<T>(
+    t: Tracked<sm.StringMap<T|undefined>|undefined>,
+    ref: oaPlus.JsonReference
+): T|undefined {
     const value = t.value
     if (value === undefined) {
         // error
@@ -86,7 +89,10 @@ function optional<T>(value: T): Optional<T> {
     return { value }
 }
 
-function getOptionalParameter({ discriminatorName, discriminatorValue }: Context, parameter: oa.Parameter): oa.Parameter|undefined {
+function getOptionalParameter(
+    { discriminatorName, discriminatorValue }: Context,
+    parameter: oa.Parameter
+): oa.Parameter|undefined {
     const pName = parameter.name
     if (discriminatorValue !== undefined && pName === discriminatorName) {
         const pEnum = getParameterEnum(parameter)
@@ -259,14 +265,8 @@ function convertOpenApi(context: Context): oa.Main {
 }
 
 export function mergeEnum(
-    a: ReadonlyArray<string>|undefined, b: ReadonlyArray<string>|undefined
+    a: ReadonlyArray<string>, b: ReadonlyArray<string>
 ): ReadonlyArray<string> {
-    if (a === undefined) {
-        return b === undefined ? [] : b
-    }
-    if (b === undefined) {
-        return a
-    }
     const c = _.concat(a, b)
     const f = _.map(c, v => sm.entry(v, true))
     const m = sm.stringMap(f)
