@@ -126,18 +126,18 @@ describe("test", () => {
                 version: "0",
             },
             parameters: {
-                allApiVersions: {
-                    name: "api-version",
-                    in: "query",
-                    type: "string",
-                    enum: ["2016", "2017", "2018"],
-                },
                 apiVersionFrom2017: {
                     name: "api-version",
                     in: "query",
                     type: "string",
                     enum: ["2017", "2018"],
                 },
+                allApiVersions: {
+                    name: "api-version",
+                    in: "query",
+                    type: "string",
+                    enum: ["2016", "2017", "2018"],
+                }
             },
             paths: {
                 "/path": {

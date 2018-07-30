@@ -43,7 +43,10 @@ function tracked<K extends keyof oaPlus.Main>(source: oaPlus.Main, k: K): Tracke
     return { value: source[k], name: k }
 }
 
-function resolve<T>(t: Tracked<sm.StringMap<T|undefined>|undefined>, ref: oaPlus.JsonReference): T|undefined {
+function resolve<T>(
+    t: Tracked<sm.StringMap<T|undefined>|undefined>,
+    ref: oaPlus.JsonReference
+): T|undefined {
     const value = t.value
     if (value === undefined) {
         // error
@@ -86,7 +89,10 @@ function optional<T>(value: T): Optional<T> {
     return { value }
 }
 
-function getOptionalParameter({ discriminatorName, discriminatorValue }: Context, parameter: oa.Parameter): oa.Parameter|undefined {
+function getOptionalParameter(
+    { discriminatorName, discriminatorValue }: Context,
+    parameter: oa.Parameter
+): oa.Parameter|undefined {
     const pName = parameter.name
     if (discriminatorValue !== undefined && pName === discriminatorName) {
         const pEnum = getParameterEnum(parameter)
@@ -258,33 +264,38 @@ function convertOpenApi(context: Context): oa.Main {
     })
 }
 
+export function mergeEnum(
+    a: ReadonlyArray<string>, b: ReadonlyArray<string>
+): ReadonlyArray<string> {
+    const c = _.concat(a, b)
+    const f = _.map(c, v => sm.entry(v, true))
+    const m = sm.stringMap(f)
+    const result = _.map(sm.entries(m), ([n]) => n)
+    return _.toArray(result)
+}
+
 export function convert(source: oaPlus.Main, discriminator: string): sm.StringMap<oa.Main> {
     const parameters = source.parameters
-    const discriminatorParameterEntry = parameters === undefined
-        ? undefined
-        : _.find(sm.entries(parameters), ([, p]) => p.name === discriminator)
-    if (discriminatorParameterEntry === undefined) {
+    if (parameters === undefined) {
+        return { default: convertOpenApi({ source }) }
+    }
+    const discriminatorParameters = _.filter(sm.values(parameters), p => p.name === discriminator)
+    const discriminatorEnums = _.filterMap(discriminatorParameters, getParameterEnum)
+    const discriminatorEnum = _.reduce(discriminatorEnums, mergeEnum)
+    if (discriminatorEnum === undefined) {
         return { default: convertOpenApi({ source }) }
     } else {
-        const discriminatorParameter = discriminatorParameterEntry[1]
-        const enumValues = getParameterEnum(discriminatorParameter)
-        if (enumValues === undefined) {
-            // TODO: report an error
-            return { default: convertOpenApi({ source }) }
-        } else {
-            const name = discriminatorParameter.name
-            const entries = _.map(
-                enumValues,
-                value => sm.entry(
-                    value,
-                    convertOpenApi({
-                        source,
-                        discriminatorName: name,
-                        discriminatorValue: value
-                    })
-                )
+        const entries = _.map(
+            discriminatorEnum,
+            value => sm.entry(
+                value,
+                convertOpenApi({
+                    source,
+                    discriminatorName: discriminator,
+                    discriminatorValue: value
+                })
             )
-            return sm.stringMap(entries)
-        }
+        )
+        return sm.stringMap(entries)
     }
 }

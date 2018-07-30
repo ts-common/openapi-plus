@@ -66,3 +66,4 @@ typings/
 *.d.ts
 openApi.ts
 openApiPlus.ts
+draft04Schema.ts
