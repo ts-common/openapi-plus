@@ -11,7 +11,7 @@
   "additionalProperties": false,
   "patternProperties": {
     "^x-": {
-      "$ref": "#/definitions/vendorExtension"
+      "$ref": "openApi.json#/definitions/vendorExtension"
     }
   },
   "properties": {
@@ -86,7 +86,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "properties": {
@@ -136,7 +136,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -159,7 +159,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -212,7 +212,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -232,7 +232,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "properties": {
@@ -301,7 +301,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "properties": {
@@ -344,7 +344,7 @@
           "$ref": "#/definitions/responseValue"
         },
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "not": {
@@ -352,7 +352,7 @@
         "additionalProperties": false,
         "patternProperties": {
           "^x-": {
-            "$ref": "#/definitions/vendorExtension"
+            "$ref": "openApi.json#/definitions/vendorExtension"
           }
         }
       }
@@ -396,7 +396,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -477,14 +477,9 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
-    },
-    "vendorExtension": {
-      "description": "Any property starting with x- is valid.",
-      "additionalProperties": true,
-      "additionalItems": true
     },
     "bodyParameter": {
       "type": "object",
@@ -495,7 +490,7 @@
       ],
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "properties": {
@@ -534,7 +529,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "properties": {
@@ -627,7 +622,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "properties": {
@@ -725,7 +720,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "properties": {
@@ -819,7 +814,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "required": [
@@ -943,7 +938,7 @@
       "description": "A deterministic version of a JSON Schema object.",
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "properties": {
@@ -1072,7 +1067,7 @@
       "description": "A deterministic version of a JSON Schema object.",
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       },
       "required": [
@@ -1176,7 +1171,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -1221,7 +1216,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -1244,7 +1239,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -1292,7 +1287,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -1327,7 +1322,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -1365,7 +1360,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -1403,7 +1398,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -1441,7 +1436,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
@@ -1484,7 +1479,7 @@
       },
       "patternProperties": {
         "^x-": {
-          "$ref": "#/definitions/vendorExtension"
+          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
