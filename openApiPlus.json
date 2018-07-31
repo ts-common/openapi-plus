@@ -311,16 +311,16 @@
           "$ref": "#/definitions/primitivesItems"
         },
         "collectionFormat": {
-          "$ref": "#/definitions/collectionFormat"
+          "$ref": "openApi.json#/definitions/collectionFormat"
         },
         "default": {
-          "$ref": "#/definitions/default"
+          "$ref": "openApi.json#/definitions/default"
         },
         "maximum": {
-          "$ref": "#/definitions/maximum"
+          "$ref": "openApi.json#/definitions/maximum"
         },
         "exclusiveMaximum": {
-          "$ref": "#/definitions/exclusiveMaximum"
+          "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
           "$ref": "#/definitions/minimum"
@@ -412,16 +412,16 @@
           "$ref": "#/definitions/primitivesItems"
         },
         "collectionFormat": {
-          "$ref": "#/definitions/collectionFormat"
+          "$ref": "openApi.json#/definitions/collectionFormat"
         },
         "default": {
-          "$ref": "#/definitions/default"
+          "$ref": "openApi.json#/definitions/default"
         },
         "maximum": {
-          "$ref": "#/definitions/maximum"
+          "$ref": "openApi.json#/definitions/maximum"
         },
         "exclusiveMaximum": {
-          "$ref": "#/definitions/exclusiveMaximum"
+          "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
           "$ref": "#/definitions/minimum"
@@ -513,13 +513,13 @@
           "$ref": "#/definitions/collectionFormatWithMulti"
         },
         "default": {
-          "$ref": "#/definitions/default"
+          "$ref": "openApi.json#/definitions/default"
         },
         "maximum": {
-          "$ref": "#/definitions/maximum"
+          "$ref": "openApi.json#/definitions/maximum"
         },
         "exclusiveMaximum": {
-          "$ref": "#/definitions/exclusiveMaximum"
+          "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
           "$ref": "#/definitions/minimum"
@@ -612,13 +612,13 @@
           "$ref": "#/definitions/collectionFormatWithMulti"
         },
         "default": {
-          "$ref": "#/definitions/default"
+          "$ref": "openApi.json#/definitions/default"
         },
         "maximum": {
-          "$ref": "#/definitions/maximum"
+          "$ref": "openApi.json#/definitions/maximum"
         },
         "exclusiveMaximum": {
-          "$ref": "#/definitions/exclusiveMaximum"
+          "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
           "$ref": "#/definitions/minimum"
@@ -705,16 +705,16 @@
           "$ref": "#/definitions/primitivesItems"
         },
         "collectionFormat": {
-          "$ref": "#/definitions/collectionFormat"
+          "$ref": "openApi.json#/definitions/collectionFormat"
         },
         "default": {
-          "$ref": "#/definitions/default"
+          "$ref": "openApi.json#/definitions/default"
         },
         "maximum": {
-          "$ref": "#/definitions/maximum"
+          "$ref": "openApi.json#/definitions/maximum"
         },
         "exclusiveMaximum": {
-          "$ref": "#/definitions/exclusiveMaximum"
+          "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
           "$ref": "#/definitions/minimum"
@@ -840,16 +840,16 @@
           "$ref": "#/definitions/primitivesItems"
         },
         "collectionFormat": {
-          "$ref": "#/definitions/collectionFormat"
+          "$ref": "openApi.json#/definitions/collectionFormat"
         },
         "default": {
-          "$ref": "#/definitions/default"
+          "$ref": "openApi.json#/definitions/default"
         },
         "maximum": {
-          "$ref": "#/definitions/maximum"
+          "$ref": "openApi.json#/definitions/maximum"
         },
         "exclusiveMaximum": {
-          "$ref": "#/definitions/exclusiveMaximum"
+          "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
           "$ref": "#/definitions/minimum"
@@ -1190,16 +1190,6 @@
       },
       "uniqueItems": true
     },
-    "collectionFormat": {
-      "type": "string",
-      "enum": [
-        "csv",
-        "ssv",
-        "tsv",
-        "pipes"
-      ],
-      "default": "csv"
-    },
     "collectionFormatWithMulti": {
       "type": "string",
       "enum": [
@@ -1217,17 +1207,8 @@
     "description": {
       "$ref": "draft04Schema.json#/properties/description"
     },
-    "default": {
-      "$ref": "draft04Schema.json#/properties/default"
-    },
     "multipleOf": {
       "$ref": "draft04Schema.json#/properties/multipleOf"
-    },
-    "maximum": {
-      "$ref": "draft04Schema.json#/properties/maximum"
-    },
-    "exclusiveMaximum": {
-      "$ref": "draft04Schema.json#/properties/exclusiveMaximum"
     },
     "minimum": {
       "$ref": "draft04Schema.json#/properties/minimum"
