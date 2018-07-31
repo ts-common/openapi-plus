@@ -164,7 +164,7 @@
             "$ref": "openApi.json#/definitions/apiKeySecurity"
           },
           {
-            "$ref": "#/definitions/oauth2ImplicitSecurity"
+            "$ref": "openApi.json#/definitions/oauth2ImplicitSecurity"
           },
           {
             "$ref": "#/definitions/oauth2PasswordSecurity"
@@ -176,44 +176,6 @@
             "$ref": "#/definitions/oauth2AccessCodeSecurity"
           }
         ]
-      }
-    },
-    "oauth2ImplicitSecurity": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "type",
-        "flow",
-        "authorizationUrl"
-      ],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "oauth2"
-          ]
-        },
-        "flow": {
-          "type": "string",
-          "enum": [
-            "implicit"
-          ]
-        },
-        "scopes": {
-          "$ref": "openApi.json#/definitions/oauth2Scopes"
-        },
-        "authorizationUrl": {
-          "type": "string",
-          "format": "uri"
-        },
-        "description": {
-          "type": "string"
-        }
-      },
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
       }
     },
     "oauth2PasswordSecurity": {
