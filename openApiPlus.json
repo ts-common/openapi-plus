@@ -35,12 +35,10 @@
       "$ref": "openApi.json#/definitions/schemesList"
     },
     "consumes": {
-      "description": "A list of MIME types accepted by the API.",
-      "$ref": "#/definitions/mediaTypeList"
+      "$ref": "openApi.json#/properties/consumes"
     },
     "produces": {
-      "description": "A list of MIME types the API can produce.",
-      "$ref": "#/definitions/mediaTypeList"
+      "$ref": "openApi.json#/properties/produces"
     },
     "paths": {
       "$ref": "#/definitions/paths"
@@ -68,7 +66,7 @@
       "uniqueItems": true
     },
     "externalDocs": {
-      "$ref": "#/definitions/externalDocs"
+      "$ref": "openApi.json#/definitions/externalDocs"
     }
   },
   "definitions": {
@@ -85,7 +83,7 @@
     "definitions": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/schema"
+        "$ref": "openApi.json#/definitions/schema"
       },
       "description": "One or more JSON objects describing the schemas being consumed and produced by the API."
     },
@@ -102,28 +100,6 @@
         "$ref": "#/definitions/response"
       },
       "description": "One or more JSON representations for parameters"
-    },
-    "externalDocs": {
-      "type": "object",
-      "additionalProperties": false,
-      "description": "information about external documentation",
-      "required": [
-        "url"
-      ],
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string",
-          "format": "uri"
-        }
-      },
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      }
     },
     "examples": {
       "type": "object",
@@ -157,7 +133,7 @@
           "description": "A longer description of the operation, GitHub Flavored Markdown is allowed."
         },
         "externalDocs": {
-          "$ref": "#/definitions/externalDocs"
+          "$ref": "openApi.json#/definitions/externalDocs"
         },
         "operationId": {
           "type": "string",
@@ -165,11 +141,11 @@
         },
         "produces": {
           "description": "A list of MIME types the API can produce.",
-          "$ref": "#/definitions/mediaTypeList"
+          "$ref": "openApi.json#/definitions/mediaTypeList"
         },
         "consumes": {
           "description": "A list of MIME types the API can consume.",
-          "$ref": "#/definitions/mediaTypeList"
+          "$ref": "openApi.json#/definitions/mediaTypeList"
         },
         "parameters": {
           "$ref": "#/definitions/parametersList"
@@ -284,7 +260,7 @@
         "schema": {
           "oneOf": [
             {
-              "$ref": "#/definitions/schema"
+              "$ref": "openApi.json#/definitions/schema"
             },
             {
               "$ref": "#/definitions/fileSchema"
@@ -385,45 +361,6 @@
           "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
-    },
-    "bodyParameter": {
-      "type": "object",
-      "required": [
-        "name",
-        "in",
-        "schema"
-      ],
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      },
-      "properties": {
-        "description": {
-          "type": "string",
-          "description": "A brief description of the parameter. This could contain examples of use.  GitHub Flavored Markdown is allowed."
-        },
-        "name": {
-          "type": "string",
-          "description": "The name of the parameter."
-        },
-        "in": {
-          "type": "string",
-          "description": "Determines the location of the parameter.",
-          "enum": [
-            "body"
-          ]
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Determines whether or not this parameter is required or optional.",
-          "default": false
-        },
-        "schema": {
-          "$ref": "#/definitions/schema"
-        }
-      },
-      "additionalProperties": false
     },
     "headerParameterSubSchema": {
       "required": [
@@ -831,141 +768,12 @@
     "parameter": {
       "oneOf": [
         {
-          "$ref": "#/definitions/bodyParameter"
+          "$ref": "openApi.json#/definitions/bodyParameter"
         },
         {
           "$ref": "#/definitions/nonBodyParameter"
         }
       ]
-    },
-    "schema": {
-      "type": "object",
-      "description": "A deterministic version of a JSON Schema object.",
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      },
-      "properties": {
-        "$ref": {
-          "type": "string"
-        },
-        "format": {
-          "type": "string"
-        },
-        "title": {
-          "$ref": "draft04Schema.json#/properties/title"
-        },
-        "description": {
-          "$ref": "draft04Schema.json#/properties/description"
-        },
-        "default": {
-          "$ref": "draft04Schema.json#/properties/default"
-        },
-        "multipleOf": {
-          "$ref": "draft04Schema.json#/properties/multipleOf"
-        },
-        "maximum": {
-          "$ref": "draft04Schema.json#/properties/maximum"
-        },
-        "exclusiveMaximum": {
-          "$ref": "draft04Schema.json#/properties/exclusiveMaximum"
-        },
-        "minimum": {
-          "$ref": "draft04Schema.json#/properties/minimum"
-        },
-        "exclusiveMinimum": {
-          "$ref": "draft04Schema.json#/properties/exclusiveMinimum"
-        },
-        "maxLength": {
-          "$ref": "draft04Schema.json#/definitions/positiveInteger"
-        },
-        "minLength": {
-          "$ref": "draft04Schema.json#/definitions/positiveIntegerDefault0"
-        },
-        "pattern": {
-          "$ref": "draft04Schema.json#/properties/pattern"
-        },
-        "maxItems": {
-          "$ref": "draft04Schema.json#/definitions/positiveInteger"
-        },
-        "minItems": {
-          "$ref": "draft04Schema.json#/definitions/positiveIntegerDefault0"
-        },
-        "uniqueItems": {
-          "$ref": "draft04Schema.json#/properties/uniqueItems"
-        },
-        "maxProperties": {
-          "$ref": "draft04Schema.json#/definitions/positiveInteger"
-        },
-        "minProperties": {
-          "$ref": "draft04Schema.json#/definitions/positiveIntegerDefault0"
-        },
-        "required": {
-          "$ref": "draft04Schema.json#/definitions/stringArray"
-        },
-        "enum": {
-          "$ref": "draft04Schema.json#/properties/enum"
-        },
-        "additionalProperties": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/schema"
-            },
-            {
-              "type": "boolean"
-            }
-          ],
-          "default": {}
-        },
-        "type": {
-          "$ref": "draft04Schema.json#/properties/type"
-        },
-        "items": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/schema"
-            },
-            {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/schema"
-              }
-            }
-          ],
-          "default": {}
-        },
-        "allOf": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/schema"
-          }
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/schema"
-          },
-          "default": {}
-        },
-        "discriminator": {
-          "type": "string"
-        },
-        "readOnly": {
-          "type": "boolean",
-          "default": false
-        },
-        "xml": {
-          "$ref": "#/definitions/xml"
-        },
-        "externalDocs": {
-          "$ref": "#/definitions/externalDocs"
-        },
-        "example": {}
-      },
-      "additionalProperties": false
     },
     "fileSchema": {
       "type": "object",
@@ -1005,7 +813,7 @@
           "default": false
         },
         "externalDocs": {
-          "$ref": "#/definitions/externalDocs"
+          "$ref": "openApi.json#/definitions/externalDocs"
         },
         "example": {}
       },
@@ -1097,34 +905,6 @@
         "uniqueItems": true
       }
     },
-    "xml": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "namespace": {
-          "type": "string"
-        },
-        "prefix": {
-          "type": "string"
-        },
-        "attribute": {
-          "type": "boolean",
-          "default": false
-        },
-        "wrapped": {
-          "type": "boolean",
-          "default": false
-        }
-      },
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      }
-    },
     "tag": {
       "type": "object",
       "additionalProperties": false,
@@ -1139,7 +919,7 @@
           "type": "string"
         },
         "externalDocs": {
-          "$ref": "#/definitions/externalDocs"
+          "$ref": "openApi.json#/definitions/externalDocs"
         }
       },
       "patternProperties": {
@@ -1393,13 +1173,6 @@
       "additionalProperties": {
         "type": "string"
       }
-    },
-    "mediaTypeList": {
-      "type": "array",
-      "items": {
-        "$ref": "openApi.json#/definitions/mimeType"
-      },
-      "uniqueItems": true
     },
     "parametersList": {
       "type": "array",
