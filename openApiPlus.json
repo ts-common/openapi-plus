@@ -323,19 +323,19 @@
           "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
-          "$ref": "#/definitions/minimum"
+          "$ref": "openApi.json#/definitions/minimum"
         },
         "exclusiveMinimum": {
-          "$ref": "#/definitions/exclusiveMinimum"
+          "$ref": "openApi.json#/definitions/exclusiveMinimum"
         },
         "maxLength": {
-          "$ref": "#/definitions/maxLength"
+          "$ref": "openApi.json#/definitions/maxLength"
         },
         "minLength": {
-          "$ref": "#/definitions/minLength"
+          "$ref": "openApi.json#/definitions/minLength"
         },
         "pattern": {
-          "$ref": "#/definitions/pattern"
+          "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
           "$ref": "#/definitions/maxItems"
@@ -424,19 +424,19 @@
           "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
-          "$ref": "#/definitions/minimum"
+          "$ref": "openApi.json#/definitions/minimum"
         },
         "exclusiveMinimum": {
-          "$ref": "#/definitions/exclusiveMinimum"
+          "$ref": "openApi.json#/definitions/exclusiveMinimum"
         },
         "maxLength": {
-          "$ref": "#/definitions/maxLength"
+          "$ref": "openApi.json#/definitions/maxLength"
         },
         "minLength": {
-          "$ref": "#/definitions/minLength"
+          "$ref": "openApi.json#/definitions/minLength"
         },
         "pattern": {
-          "$ref": "#/definitions/pattern"
+          "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
           "$ref": "#/definitions/maxItems"
@@ -522,19 +522,19 @@
           "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
-          "$ref": "#/definitions/minimum"
+          "$ref": "openApi.json#/definitions/minimum"
         },
         "exclusiveMinimum": {
-          "$ref": "#/definitions/exclusiveMinimum"
+          "$ref": "openApi.json#/definitions/exclusiveMinimum"
         },
         "maxLength": {
-          "$ref": "#/definitions/maxLength"
+          "$ref": "openApi.json#/definitions/maxLength"
         },
         "minLength": {
-          "$ref": "#/definitions/minLength"
+          "$ref": "openApi.json#/definitions/minLength"
         },
         "pattern": {
-          "$ref": "#/definitions/pattern"
+          "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
           "$ref": "#/definitions/maxItems"
@@ -621,19 +621,19 @@
           "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
-          "$ref": "#/definitions/minimum"
+          "$ref": "openApi.json#/definitions/minimum"
         },
         "exclusiveMinimum": {
-          "$ref": "#/definitions/exclusiveMinimum"
+          "$ref": "openApi.json#/definitions/exclusiveMinimum"
         },
         "maxLength": {
-          "$ref": "#/definitions/maxLength"
+          "$ref": "openApi.json#/definitions/maxLength"
         },
         "minLength": {
-          "$ref": "#/definitions/minLength"
+          "$ref": "openApi.json#/definitions/minLength"
         },
         "pattern": {
-          "$ref": "#/definitions/pattern"
+          "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
           "$ref": "#/definitions/maxItems"
@@ -717,19 +717,19 @@
           "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
-          "$ref": "#/definitions/minimum"
+          "$ref": "openApi.json#/definitions/minimum"
         },
         "exclusiveMinimum": {
-          "$ref": "#/definitions/exclusiveMinimum"
+          "$ref": "openApi.json#/definitions/exclusiveMinimum"
         },
         "maxLength": {
-          "$ref": "#/definitions/maxLength"
+          "$ref": "openApi.json#/definitions/maxLength"
         },
         "minLength": {
-          "$ref": "#/definitions/minLength"
+          "$ref": "openApi.json#/definitions/minLength"
         },
         "pattern": {
-          "$ref": "#/definitions/pattern"
+          "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
           "$ref": "#/definitions/maxItems"
@@ -852,19 +852,19 @@
           "$ref": "openApi.json#/definitions/exclusiveMaximum"
         },
         "minimum": {
-          "$ref": "#/definitions/minimum"
+          "$ref": "openApi.json#/definitions/minimum"
         },
         "exclusiveMinimum": {
-          "$ref": "#/definitions/exclusiveMinimum"
+          "$ref": "openApi.json#/definitions/exclusiveMinimum"
         },
         "maxLength": {
-          "$ref": "#/definitions/maxLength"
+          "$ref": "openApi.json#/definitions/maxLength"
         },
         "minLength": {
-          "$ref": "#/definitions/minLength"
+          "$ref": "openApi.json#/definitions/minLength"
         },
         "pattern": {
-          "$ref": "#/definitions/pattern"
+          "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
           "$ref": "#/definitions/maxItems"
@@ -1209,21 +1209,6 @@
     },
     "multipleOf": {
       "$ref": "draft04Schema.json#/properties/multipleOf"
-    },
-    "minimum": {
-      "$ref": "draft04Schema.json#/properties/minimum"
-    },
-    "exclusiveMinimum": {
-      "$ref": "draft04Schema.json#/properties/exclusiveMinimum"
-    },
-    "maxLength": {
-      "$ref": "draft04Schema.json#/definitions/positiveInteger"
-    },
-    "minLength": {
-      "$ref": "draft04Schema.json#/definitions/positiveIntegerDefault0"
-    },
-    "pattern": {
-      "$ref": "draft04Schema.json#/properties/pattern"
     },
     "maxItems": {
       "$ref": "draft04Schema.json#/definitions/positiveInteger"
