@@ -170,50 +170,12 @@
             "$ref": "openApi.json#/definitions/oauth2PasswordSecurity"
           },
           {
-            "$ref": "#/definitions/oauth2ApplicationSecurity"
+            "$ref": "openApi.json#/definitions/oauth2ApplicationSecurity"
           },
           {
             "$ref": "#/definitions/oauth2AccessCodeSecurity"
           }
         ]
-      }
-    },
-    "oauth2ApplicationSecurity": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "type",
-        "flow",
-        "tokenUrl"
-      ],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "oauth2"
-          ]
-        },
-        "flow": {
-          "type": "string",
-          "enum": [
-            "application"
-          ]
-        },
-        "scopes": {
-          "$ref": "openApi.json#/definitions/oauth2Scopes"
-        },
-        "tokenUrl": {
-          "type": "string",
-          "format": "uri"
-        },
-        "description": {
-          "type": "string"
-        }
-      },
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
       }
     },
     "oauth2AccessCodeSecurity": {
