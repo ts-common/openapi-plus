@@ -47,7 +47,7 @@
       "$ref": "openApi.json#/definitions/definitions"
     },
     "parameters": {
-      "$ref": "#/definitions/parameterDefinitions"
+      "$ref": "openApi.json#/definitions/parameterDefinitions"
     },
     "responses": {
       "$ref": "#/definitions/responseDefinitions"
@@ -79,13 +79,6 @@
         }
       },
       "additionalProperties": false
-    },
-    "parameterDefinitions": {
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "openApi.json#/definitions/parameter"
-      },
-      "description": "One or more JSON representations for parameters"
     },
     "responseDefinitions": {
       "type": "object",
