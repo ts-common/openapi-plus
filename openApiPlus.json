@@ -44,7 +44,7 @@
       "$ref": "#/definitions/paths"
     },
     "definitions": {
-      "$ref": "#/definitions/definitions"
+      "$ref": "openApi.json#/definitions/definitions"
     },
     "parameters": {
       "$ref": "#/definitions/parameterDefinitions"
@@ -80,13 +80,6 @@
       },
       "additionalProperties": false
     },
-    "definitions": {
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "openApi.json#/definitions/schema"
-      },
-      "description": "One or more JSON objects describing the schemas being consumed and produced by the API."
-    },
     "parameterDefinitions": {
       "type": "object",
       "additionalProperties": {
@@ -101,74 +94,14 @@
       },
       "description": "One or more JSON representations for parameters"
     },
-    "operation": {
-      "type": "object",
-      "required": [
-        "responses"
-      ],
-      "additionalProperties": false,
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      },
-      "properties": {
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "uniqueItems": true
-        },
-        "summary": {
-          "type": "string",
-          "description": "A brief summary of the operation."
-        },
-        "description": {
-          "type": "string",
-          "description": "A longer description of the operation, GitHub Flavored Markdown is allowed."
-        },
-        "externalDocs": {
-          "$ref": "openApi.json#/definitions/externalDocs"
-        },
-        "operationId": {
-          "type": "string",
-          "description": "A unique identifier of the operation."
-        },
-        "produces": {
-          "description": "A list of MIME types the API can produce.",
-          "$ref": "openApi.json#/definitions/mediaTypeList"
-        },
-        "consumes": {
-          "description": "A list of MIME types the API can consume.",
-          "$ref": "openApi.json#/definitions/mediaTypeList"
-        },
-        "parameters": {
-          "$ref": "openApi.json#/definitions/parametersList"
-        },
-        "responses": {
-          "$ref": "openApi.json#/definitions/responses"
-        },
-        "schemes": {
-          "$ref": "openApi.json#/definitions/schemesList"
-        },
-        "deprecated": {
-          "type": "boolean",
-          "default": false
-        },
-        "security": {
-          "$ref": "openApi.json#/definitions/security"
-        }
-      }
-    },
     "operations": {
       "oneOf": [
         {
-          "$ref": "#/definitions/operation"
+          "$ref": "openApi.json#/definitions/operation"
         },
         {
           "items": {
-            "$ref": "#/definitions/operation"
+            "$ref": "openApi.json#/definitions/operation"
           }
         }
       ]
