@@ -148,7 +148,7 @@
           "$ref": "openApi.json#/definitions/mediaTypeList"
         },
         "parameters": {
-          "$ref": "#/definitions/parametersList"
+          "$ref": "openApi.json#/definitions/parametersList"
         },
         "responses": {
           "$ref": "#/definitions/responses"
@@ -211,7 +211,7 @@
           "$ref": "#/definitions/operations"
         },
         "parameters": {
-          "$ref": "#/definitions/parametersList"
+          "$ref": "openApi.json#/definitions/parametersList"
         }
       }
     },
@@ -263,7 +263,7 @@
               "$ref": "openApi.json#/definitions/schema"
             },
             {
-              "$ref": "#/definitions/fileSchema"
+              "$ref": "openApi.json#/definitions/fileSchema"
             }
           ]
         },
@@ -361,50 +361,6 @@
           "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
-    },
-    "fileSchema": {
-      "type": "object",
-      "description": "A deterministic version of a JSON Schema object.",
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      },
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "format": {
-          "type": "string"
-        },
-        "title": {
-          "$ref": "draft04Schema.json#/properties/title"
-        },
-        "description": {
-          "$ref": "draft04Schema.json#/properties/description"
-        },
-        "default": {
-          "$ref": "draft04Schema.json#/properties/default"
-        },
-        "required": {
-          "$ref": "draft04Schema.json#/definitions/stringArray"
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "file"
-          ]
-        },
-        "readOnly": {
-          "type": "boolean",
-          "default": false
-        },
-        "externalDocs": {
-          "$ref": "openApi.json#/definitions/externalDocs"
-        },
-        "example": {}
-      },
-      "additionalProperties": false
     },
     "security": {
       "type": "array",
@@ -691,22 +647,6 @@
       "additionalProperties": {
         "type": "string"
       }
-    },
-    "parametersList": {
-      "type": "array",
-      "description": "The parameters needed to send a valid API call.",
-      "additionalItems": false,
-      "items": {
-        "oneOf": [
-          {
-            "$ref": "openApi.json#/definitions/parameter"
-          },
-          {
-            "$ref": "openApi.json#/definitions/jsonReference"
-          }
-        ]
-      },
-      "uniqueItems": true
     },
     "title": {
       "$ref": "draft04Schema.json#/properties/title"
