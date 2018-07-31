@@ -214,19 +214,9 @@
     "security": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/securityRequirement"
+        "$ref": "openApi.json#/definitions/securityRequirement"
       },
       "uniqueItems": true
-    },
-    "securityRequirement": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        },
-        "uniqueItems": true
-      }
     },
     "tag": {
       "type": "object",
