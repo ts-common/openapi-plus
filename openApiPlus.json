@@ -308,7 +308,7 @@
           "type": "string"
         },
         "items": {
-          "$ref": "#/definitions/primitivesItems"
+          "$ref": "openApi.json#/definitions/primitivesItems"
         },
         "collectionFormat": {
           "$ref": "openApi.json#/definitions/collectionFormat"
@@ -338,19 +338,19 @@
           "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
-          "$ref": "#/definitions/maxItems"
+          "$ref": "openApi.json#/definitions/maxItems"
         },
         "minItems": {
-          "$ref": "#/definitions/minItems"
+          "$ref": "openApi.json#/definitions/minItems"
         },
         "uniqueItems": {
-          "$ref": "#/definitions/uniqueItems"
+          "$ref": "openApi.json#/definitions/uniqueItems"
         },
         "enum": {
-          "$ref": "#/definitions/enum"
+          "$ref": "openApi.json#/definitions/enum"
         },
         "multipleOf": {
-          "$ref": "#/definitions/multipleOf"
+          "$ref": "openApi.json#/definitions/multipleOf"
         },
         "description": {
           "type": "string"
@@ -409,7 +409,7 @@
           "type": "string"
         },
         "items": {
-          "$ref": "#/definitions/primitivesItems"
+          "$ref": "openApi.json#/definitions/primitivesItems"
         },
         "collectionFormat": {
           "$ref": "openApi.json#/definitions/collectionFormat"
@@ -439,19 +439,19 @@
           "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
-          "$ref": "#/definitions/maxItems"
+          "$ref": "openApi.json#/definitions/maxItems"
         },
         "minItems": {
-          "$ref": "#/definitions/minItems"
+          "$ref": "openApi.json#/definitions/minItems"
         },
         "uniqueItems": {
-          "$ref": "#/definitions/uniqueItems"
+          "$ref": "openApi.json#/definitions/uniqueItems"
         },
         "enum": {
-          "$ref": "#/definitions/enum"
+          "$ref": "openApi.json#/definitions/enum"
         },
         "multipleOf": {
-          "$ref": "#/definitions/multipleOf"
+          "$ref": "openApi.json#/definitions/multipleOf"
         }
       }
     },
@@ -507,7 +507,7 @@
           "type": "string"
         },
         "items": {
-          "$ref": "#/definitions/primitivesItems"
+          "$ref": "openApi.json#/definitions/primitivesItems"
         },
         "collectionFormat": {
           "$ref": "#/definitions/collectionFormatWithMulti"
@@ -537,19 +537,19 @@
           "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
-          "$ref": "#/definitions/maxItems"
+          "$ref": "openApi.json#/definitions/maxItems"
         },
         "minItems": {
-          "$ref": "#/definitions/minItems"
+          "$ref": "openApi.json#/definitions/minItems"
         },
         "uniqueItems": {
-          "$ref": "#/definitions/uniqueItems"
+          "$ref": "openApi.json#/definitions/uniqueItems"
         },
         "enum": {
-          "$ref": "#/definitions/enum"
+          "$ref": "openApi.json#/definitions/enum"
         },
         "multipleOf": {
-          "$ref": "#/definitions/multipleOf"
+          "$ref": "openApi.json#/definitions/multipleOf"
         }
       }
     },
@@ -606,7 +606,7 @@
           "type": "string"
         },
         "items": {
-          "$ref": "#/definitions/primitivesItems"
+          "$ref": "openApi.json#/definitions/primitivesItems"
         },
         "collectionFormat": {
           "$ref": "#/definitions/collectionFormatWithMulti"
@@ -636,19 +636,19 @@
           "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
-          "$ref": "#/definitions/maxItems"
+          "$ref": "openApi.json#/definitions/maxItems"
         },
         "minItems": {
-          "$ref": "#/definitions/minItems"
+          "$ref": "openApi.json#/definitions/minItems"
         },
         "uniqueItems": {
-          "$ref": "#/definitions/uniqueItems"
+          "$ref": "openApi.json#/definitions/uniqueItems"
         },
         "enum": {
-          "$ref": "#/definitions/enum"
+          "$ref": "openApi.json#/definitions/enum"
         },
         "multipleOf": {
-          "$ref": "#/definitions/multipleOf"
+          "$ref": "openApi.json#/definitions/multipleOf"
         }
       }
     },
@@ -702,7 +702,7 @@
           "type": "string"
         },
         "items": {
-          "$ref": "#/definitions/primitivesItems"
+          "$ref": "openApi.json#/definitions/primitivesItems"
         },
         "collectionFormat": {
           "$ref": "openApi.json#/definitions/collectionFormat"
@@ -732,19 +732,19 @@
           "$ref": "openApi.json#/definitions/pattern"
         },
         "maxItems": {
-          "$ref": "#/definitions/maxItems"
+          "$ref": "openApi.json#/definitions/maxItems"
         },
         "minItems": {
-          "$ref": "#/definitions/minItems"
+          "$ref": "openApi.json#/definitions/minItems"
         },
         "uniqueItems": {
-          "$ref": "#/definitions/uniqueItems"
+          "$ref": "openApi.json#/definitions/uniqueItems"
         },
         "enum": {
-          "$ref": "#/definitions/enum"
+          "$ref": "openApi.json#/definitions/enum"
         },
         "multipleOf": {
-          "$ref": "#/definitions/multipleOf"
+          "$ref": "openApi.json#/definitions/multipleOf"
         }
       }
     },
@@ -818,75 +818,6 @@
         "example": {}
       },
       "additionalProperties": false
-    },
-    "primitivesItems": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "string",
-            "number",
-            "integer",
-            "boolean",
-            "array"
-          ]
-        },
-        "format": {
-          "type": "string"
-        },
-        "items": {
-          "$ref": "#/definitions/primitivesItems"
-        },
-        "collectionFormat": {
-          "$ref": "openApi.json#/definitions/collectionFormat"
-        },
-        "default": {
-          "$ref": "openApi.json#/definitions/default"
-        },
-        "maximum": {
-          "$ref": "openApi.json#/definitions/maximum"
-        },
-        "exclusiveMaximum": {
-          "$ref": "openApi.json#/definitions/exclusiveMaximum"
-        },
-        "minimum": {
-          "$ref": "openApi.json#/definitions/minimum"
-        },
-        "exclusiveMinimum": {
-          "$ref": "openApi.json#/definitions/exclusiveMinimum"
-        },
-        "maxLength": {
-          "$ref": "openApi.json#/definitions/maxLength"
-        },
-        "minLength": {
-          "$ref": "openApi.json#/definitions/minLength"
-        },
-        "pattern": {
-          "$ref": "openApi.json#/definitions/pattern"
-        },
-        "maxItems": {
-          "$ref": "#/definitions/maxItems"
-        },
-        "minItems": {
-          "$ref": "#/definitions/minItems"
-        },
-        "uniqueItems": {
-          "$ref": "#/definitions/uniqueItems"
-        },
-        "enum": {
-          "$ref": "#/definitions/enum"
-        },
-        "multipleOf": {
-          "$ref": "#/definitions/multipleOf"
-        }
-      },
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      }
     },
     "security": {
       "type": "array",
@@ -1206,21 +1137,6 @@
     },
     "description": {
       "$ref": "draft04Schema.json#/properties/description"
-    },
-    "multipleOf": {
-      "$ref": "draft04Schema.json#/properties/multipleOf"
-    },
-    "maxItems": {
-      "$ref": "draft04Schema.json#/definitions/positiveInteger"
-    },
-    "minItems": {
-      "$ref": "draft04Schema.json#/definitions/positiveIntegerDefault0"
-    },
-    "uniqueItems": {
-      "$ref": "draft04Schema.json#/properties/uniqueItems"
-    },
-    "enum": {
-      "$ref": "draft04Schema.json#/properties/enum"
     },
     "jsonReference": {
       "type": "object",
