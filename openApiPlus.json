@@ -53,7 +53,7 @@
       "$ref": "#/definitions/responseDefinitions"
     },
     "security": {
-      "$ref": "#/definitions/security"
+      "$ref": "openApi.json#/definitions/security"
     },
     "securityDefinitions": {
       "$ref": "#/definitions/securityDefinitions"
@@ -157,7 +157,7 @@
           "default": false
         },
         "security": {
-          "$ref": "#/definitions/security"
+          "$ref": "openApi.json#/definitions/security"
         }
       }
     },
@@ -210,13 +210,6 @@
           "$ref": "openApi.json#/definitions/parametersList"
         }
       }
-    },
-    "security": {
-      "type": "array",
-      "items": {
-        "$ref": "openApi.json#/definitions/securityRequirement"
-      },
-      "uniqueItems": true
     },
     "tag": {
       "type": "object",
