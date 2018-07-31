@@ -97,7 +97,7 @@
     "responseDefinitions": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/response"
+        "$ref": "openApi.json#/definitions/response"
       },
       "description": "One or more JSON representations for parameters"
     },
@@ -147,7 +147,7 @@
           "$ref": "openApi.json#/definitions/parametersList"
         },
         "responses": {
-          "$ref": "#/definitions/responses"
+          "$ref": "openApi.json#/definitions/responses"
         },
         "schemes": {
           "$ref": "openApi.json#/definitions/schemesList"
@@ -208,72 +208,6 @@
         },
         "parameters": {
           "$ref": "openApi.json#/definitions/parametersList"
-        }
-      }
-    },
-    "responses": {
-      "type": "object",
-      "description": "Response objects names can either be any valid HTTP status code or 'default'.",
-      "minProperties": 1,
-      "additionalProperties": false,
-      "patternProperties": {
-        "^([0-9]{3})$|^(default)$": {
-          "$ref": "#/definitions/responseValue"
-        },
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      },
-      "not": {
-        "type": "object",
-        "additionalProperties": false,
-        "patternProperties": {
-          "^x-": {
-            "$ref": "openApi.json#/definitions/vendorExtension"
-          }
-        }
-      }
-    },
-    "responseValue": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/response"
-        },
-        {
-          "$ref": "openApi.json#/definitions/jsonReference"
-        }
-      ]
-    },
-    "response": {
-      "type": "object",
-      "required": [
-        "description"
-      ],
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "schema": {
-          "oneOf": [
-            {
-              "$ref": "openApi.json#/definitions/schema"
-            },
-            {
-              "$ref": "openApi.json#/definitions/fileSchema"
-            }
-          ]
-        },
-        "headers": {
-          "$ref": "openApi.json#/definitions/headers"
-        },
-        "examples": {
-          "$ref": "openApi.json#/definitions/examples"
-        }
-      },
-      "additionalProperties": false,
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
