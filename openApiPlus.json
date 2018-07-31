@@ -129,10 +129,6 @@
       "type": "object",
       "additionalProperties": true
     },
-    "mimeType": {
-      "type": "string",
-      "description": "The MIME type of the HTTP message."
-    },
     "operation": {
       "type": "object",
       "required": [
@@ -1401,7 +1397,7 @@
     "mediaTypeList": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/mimeType"
+        "$ref": "openApi.json#/definitions/mimeType"
       },
       "uniqueItems": true
     },
