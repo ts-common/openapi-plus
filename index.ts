@@ -46,7 +46,7 @@ function tracked<K extends keyof oaPlus.Main>(source: oaPlus.Main, k: K): Tracke
 
 function resolve<T>(
     t: Tracked<sm.StringMap<T|undefined>|undefined>,
-    ref: oaPlus.JsonReference
+    ref: oa.JsonReference
 ): T|undefined {
     const value = t.value
     if (value === undefined) {

@@ -90,7 +90,7 @@
     "parameterDefinitions": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/parameter"
+        "$ref": "openApi.json#/definitions/parameter"
       },
       "description": "One or more JSON representations for parameters"
     },
@@ -244,7 +244,7 @@
           "$ref": "#/definitions/response"
         },
         {
-          "$ref": "#/definitions/jsonReference"
+          "$ref": "openApi.json#/definitions/jsonReference"
         }
       ]
     },
@@ -361,16 +361,6 @@
           "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
-    },
-    "parameter": {
-      "oneOf": [
-        {
-          "$ref": "openApi.json#/definitions/bodyParameter"
-        },
-        {
-          "$ref": "openApi.json#/definitions/nonBodyParameter"
-        }
-      ]
     },
     "fileSchema": {
       "type": "object",
@@ -709,10 +699,10 @@
       "items": {
         "oneOf": [
           {
-            "$ref": "#/definitions/parameter"
+            "$ref": "openApi.json#/definitions/parameter"
           },
           {
-            "$ref": "#/definitions/jsonReference"
+            "$ref": "openApi.json#/definitions/jsonReference"
           }
         ]
       },
@@ -723,18 +713,6 @@
     },
     "description": {
       "$ref": "draft04Schema.json#/properties/description"
-    },
-    "jsonReference": {
-      "type": "object",
-      "required": [
-        "$ref"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "$ref": {
-          "type": "string"
-        }
-      }
     }
   }
 }
