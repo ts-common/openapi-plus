@@ -200,7 +200,7 @@
           ]
         },
         "scopes": {
-          "$ref": "#/definitions/oauth2Scopes"
+          "$ref": "openApi.json#/definitions/oauth2Scopes"
         },
         "authorizationUrl": {
           "type": "string",
@@ -238,7 +238,7 @@
           ]
         },
         "scopes": {
-          "$ref": "#/definitions/oauth2Scopes"
+          "$ref": "openApi.json#/definitions/oauth2Scopes"
         },
         "tokenUrl": {
           "type": "string",
@@ -276,7 +276,7 @@
           ]
         },
         "scopes": {
-          "$ref": "#/definitions/oauth2Scopes"
+          "$ref": "openApi.json#/definitions/oauth2Scopes"
         },
         "tokenUrl": {
           "type": "string",
@@ -315,7 +315,7 @@
           ]
         },
         "scopes": {
-          "$ref": "#/definitions/oauth2Scopes"
+          "$ref": "openApi.json#/definitions/oauth2Scopes"
         },
         "authorizationUrl": {
           "type": "string",
@@ -333,12 +333,6 @@
         "^x-": {
           "$ref": "openApi.json#/definitions/vendorExtension"
         }
-      }
-    },
-    "oauth2Scopes": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
       }
     },
     "title": {
