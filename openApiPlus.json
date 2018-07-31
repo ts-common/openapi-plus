@@ -101,10 +101,6 @@
       },
       "description": "One or more JSON representations for parameters"
     },
-    "examples": {
-      "type": "object",
-      "additionalProperties": true
-    },
     "operation": {
       "type": "object",
       "required": [
@@ -268,10 +264,10 @@
           ]
         },
         "headers": {
-          "$ref": "#/definitions/headers"
+          "$ref": "openApi.json#/definitions/headers"
         },
         "examples": {
-          "$ref": "#/definitions/examples"
+          "$ref": "openApi.json#/definitions/examples"
         }
       },
       "additionalProperties": false,
@@ -279,12 +275,6 @@
         "^x-": {
           "$ref": "openApi.json#/definitions/vendorExtension"
         }
-      }
-    },
-    "headers": {
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "openApi.json#/definitions/header"
       }
     },
     "security": {
