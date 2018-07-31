@@ -362,30 +362,13 @@
         }
       }
     },
-    "nonBodyParameter": {
-      "type": "object",
-      "oneOf": [
-        {
-          "$ref": "openApi.json#/definitions/headerParameterSubSchema"
-        },
-        {
-          "$ref": "openApi.json#/definitions/formDataParameterSubSchema"
-        },
-        {
-          "$ref": "openApi.json#/definitions/queryParameterSubSchema"
-        },
-        {
-          "$ref": "openApi.json#/definitions/pathParameterSubSchema"
-        }
-      ]
-    },
     "parameter": {
       "oneOf": [
         {
           "$ref": "openApi.json#/definitions/bodyParameter"
         },
         {
-          "$ref": "#/definitions/nonBodyParameter"
+          "$ref": "openApi.json#/definitions/nonBodyParameter"
         }
       ]
     },
