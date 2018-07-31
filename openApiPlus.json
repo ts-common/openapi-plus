@@ -158,7 +158,7 @@
       "additionalProperties": {
         "oneOf": [
           {
-            "$ref": "#/definitions/basicAuthenticationSecurity"
+            "$ref": "openApi.json#/definitions/basicAuthenticationSecurity"
           },
           {
             "$ref": "#/definitions/apiKeySecurity"
@@ -176,29 +176,6 @@
             "$ref": "#/definitions/oauth2AccessCodeSecurity"
           }
         ]
-      }
-    },
-    "basicAuthenticationSecurity": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "basic"
-          ]
-        },
-        "description": {
-          "type": "string"
-        }
-      },
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
       }
     },
     "apiKeySecurity": {
