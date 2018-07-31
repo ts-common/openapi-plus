@@ -26,17 +26,13 @@
       "$ref": "openApi.json#/definitions/info"
     },
     "host": {
-      "type": "string",
-      "pattern": "^[^{}/ :\\\\]+(?::\\d+)?$",
-      "description": "The host (name or ip) of the API. Example: 'swagger.io'"
+      "$ref": "openApi.json#/properties/host"
     },
     "basePath": {
-      "type": "string",
-      "pattern": "^/",
-      "description": "The base path to the API. Example: '/api'."
+      "$ref": "openApi.json#/properties/basePath"
     },
     "schemes": {
-      "$ref": "#/definitions/schemesList"
+      "$ref": "openApi.json#/definitions/schemesList"
     },
     "consumes": {
       "description": "A list of MIME types accepted by the API.",
@@ -186,7 +182,7 @@
           "$ref": "#/definitions/responses"
         },
         "schemes": {
-          "$ref": "#/definitions/schemesList"
+          "$ref": "openApi.json#/definitions/schemesList"
         },
         "deprecated": {
           "type": "boolean",
@@ -1421,20 +1417,6 @@
           {
             "$ref": "#/definitions/jsonReference"
           }
-        ]
-      },
-      "uniqueItems": true
-    },
-    "schemesList": {
-      "type": "array",
-      "description": "The transfer protocol of the API.",
-      "items": {
-        "type": "string",
-        "enum": [
-          "http",
-          "https",
-          "ws",
-          "wss"
         ]
       },
       "uniqueItems": true
