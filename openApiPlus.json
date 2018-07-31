@@ -59,11 +59,7 @@
       "$ref": "openApi.json#/definitions/securityDefinitions"
     },
     "tags": {
-      "type": "array",
-      "items": {
-        "$ref": "openApi.json#/definitions/tag"
-      },
-      "uniqueItems": true
+      "$ref": "openApi.json#/properties/tags"
     },
     "externalDocs": {
       "$ref": "openApi.json#/definitions/externalDocs"
@@ -129,12 +125,6 @@
           "$ref": "openApi.json#/definitions/parametersList"
         }
       }
-    },
-    "title": {
-      "$ref": "draft04Schema.json#/properties/title"
-    },
-    "description": {
-      "$ref": "draft04Schema.json#/properties/description"
     }
   }
 }
