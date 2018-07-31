@@ -56,12 +56,12 @@
       "$ref": "openApi.json#/definitions/security"
     },
     "securityDefinitions": {
-      "$ref": "#/definitions/securityDefinitions"
+      "$ref": "openApi.json#/definitions/securityDefinitions"
     },
     "tags": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/tag"
+        "$ref": "openApi.json#/definitions/tag"
       },
       "uniqueItems": true
     },
@@ -127,97 +127,6 @@
         },
         "parameters": {
           "$ref": "openApi.json#/definitions/parametersList"
-        }
-      }
-    },
-    "tag": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "externalDocs": {
-          "$ref": "openApi.json#/definitions/externalDocs"
-        }
-      },
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      }
-    },
-    "securityDefinitions": {
-      "type": "object",
-      "additionalProperties": {
-        "oneOf": [
-          {
-            "$ref": "openApi.json#/definitions/basicAuthenticationSecurity"
-          },
-          {
-            "$ref": "openApi.json#/definitions/apiKeySecurity"
-          },
-          {
-            "$ref": "openApi.json#/definitions/oauth2ImplicitSecurity"
-          },
-          {
-            "$ref": "openApi.json#/definitions/oauth2PasswordSecurity"
-          },
-          {
-            "$ref": "openApi.json#/definitions/oauth2ApplicationSecurity"
-          },
-          {
-            "$ref": "#/definitions/oauth2AccessCodeSecurity"
-          }
-        ]
-      }
-    },
-    "oauth2AccessCodeSecurity": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "type",
-        "flow",
-        "authorizationUrl",
-        "tokenUrl"
-      ],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "oauth2"
-          ]
-        },
-        "flow": {
-          "type": "string",
-          "enum": [
-            "accessCode"
-          ]
-        },
-        "scopes": {
-          "$ref": "openApi.json#/definitions/oauth2Scopes"
-        },
-        "authorizationUrl": {
-          "type": "string",
-          "format": "uri"
-        },
-        "tokenUrl": {
-          "type": "string",
-          "format": "uri"
-        },
-        "description": {
-          "type": "string"
-        }
-      },
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
         }
       }
     },
