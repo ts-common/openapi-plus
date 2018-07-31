@@ -362,99 +362,6 @@
         }
       }
     },
-    "headerParameterSubSchema": {
-      "required": [
-        "name",
-        "in",
-        "type"
-      ],
-      "additionalProperties": false,
-      "patternProperties": {
-        "^x-": {
-          "$ref": "openApi.json#/definitions/vendorExtension"
-        }
-      },
-      "properties": {
-        "required": {
-          "type": "boolean",
-          "description": "Determines whether or not this parameter is required or optional.",
-          "default": false
-        },
-        "in": {
-          "type": "string",
-          "description": "Determines the location of the parameter.",
-          "enum": [
-            "header"
-          ]
-        },
-        "description": {
-          "type": "string",
-          "description": "A brief description of the parameter. This could contain examples of use.  GitHub Flavored Markdown is allowed."
-        },
-        "name": {
-          "type": "string",
-          "description": "The name of the parameter."
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "string",
-            "number",
-            "boolean",
-            "integer",
-            "array"
-          ]
-        },
-        "format": {
-          "type": "string"
-        },
-        "items": {
-          "$ref": "openApi.json#/definitions/primitivesItems"
-        },
-        "collectionFormat": {
-          "$ref": "openApi.json#/definitions/collectionFormat"
-        },
-        "default": {
-          "$ref": "openApi.json#/definitions/default"
-        },
-        "maximum": {
-          "$ref": "openApi.json#/definitions/maximum"
-        },
-        "exclusiveMaximum": {
-          "$ref": "openApi.json#/definitions/exclusiveMaximum"
-        },
-        "minimum": {
-          "$ref": "openApi.json#/definitions/minimum"
-        },
-        "exclusiveMinimum": {
-          "$ref": "openApi.json#/definitions/exclusiveMinimum"
-        },
-        "maxLength": {
-          "$ref": "openApi.json#/definitions/maxLength"
-        },
-        "minLength": {
-          "$ref": "openApi.json#/definitions/minLength"
-        },
-        "pattern": {
-          "$ref": "openApi.json#/definitions/pattern"
-        },
-        "maxItems": {
-          "$ref": "openApi.json#/definitions/maxItems"
-        },
-        "minItems": {
-          "$ref": "openApi.json#/definitions/minItems"
-        },
-        "uniqueItems": {
-          "$ref": "openApi.json#/definitions/uniqueItems"
-        },
-        "enum": {
-          "$ref": "openApi.json#/definitions/enum"
-        },
-        "multipleOf": {
-          "$ref": "openApi.json#/definitions/multipleOf"
-        }
-      }
-    },
     "queryParameterSubSchema": {
       "required": [
         "name",
@@ -510,7 +417,7 @@
           "$ref": "openApi.json#/definitions/primitivesItems"
         },
         "collectionFormat": {
-          "$ref": "#/definitions/collectionFormatWithMulti"
+          "$ref": "openApi.json#/definitions/collectionFormatWithMulti"
         },
         "default": {
           "$ref": "openApi.json#/definitions/default"
@@ -609,7 +516,7 @@
           "$ref": "openApi.json#/definitions/primitivesItems"
         },
         "collectionFormat": {
-          "$ref": "#/definitions/collectionFormatWithMulti"
+          "$ref": "openApi.json#/definitions/collectionFormatWithMulti"
         },
         "default": {
           "$ref": "openApi.json#/definitions/default"
@@ -752,7 +659,7 @@
       "type": "object",
       "oneOf": [
         {
-          "$ref": "#/definitions/headerParameterSubSchema"
+          "$ref": "openApi.json#/definitions/headerParameterSubSchema"
         },
         {
           "$ref": "#/definitions/formDataParameterSubSchema"
@@ -1120,17 +1027,6 @@
         ]
       },
       "uniqueItems": true
-    },
-    "collectionFormatWithMulti": {
-      "type": "string",
-      "enum": [
-        "csv",
-        "ssv",
-        "tsv",
-        "pipes",
-        "multi"
-      ],
-      "default": "csv"
     },
     "title": {
       "$ref": "draft04Schema.json#/properties/title"
