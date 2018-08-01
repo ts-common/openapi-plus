@@ -55,14 +55,19 @@ See also [JSON-Schema. Enumerated Values](https://spacetelescope.github.io/under
 
 ## Questions
 
-1. `Discriminator` should have all values
-   ```json
-   "discriminator": {
-       "name": "api-version",
-       "enum": ["2013-05", "2013-06"]
-   }
-   ```
+1. `discriminator` for models. See also
+   - [OpenAPI 2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#fixed-fields-13)
+   - [OpenAPI 3.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#discriminatorObject)
 2. Should we rename `Operations` to `OperationOverload`?
+
+## The Parameter Based Model Discriminator
+
+```json
+"match-parameter": {
+    "name": "api-version",
+    "enum": ["2017"]
+}
+```
 
 ## Presentation Feedback
 
