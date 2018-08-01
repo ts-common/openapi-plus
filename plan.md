@@ -63,10 +63,29 @@ See also [JSON-Schema. Enumerated Values](https://spacetelescope.github.io/under
 ## The Parameter Based Model Discriminator
 
 ```json
-"match-parameter": {
-    "name": "api-version",
-    "enum": ["2017"]
-}
+"matchParameters": [
+    {
+        "name": "api-version",
+        "enum": ["2017"]
+    },
+    {
+        "$ref": "#/parameters/superParameter2017"
+    }
+]
+```
+
+A relax version of `Parameter Object`.
+
+```json
+"parameters": [
+    {
+        "name": "api-version",
+        "enum": ["2017"]
+    },
+    {
+        "$ref": "#/parameters/superParameter2017"
+    }
+]
 ```
 
 ## Presentation Feedback
