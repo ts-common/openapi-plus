@@ -3,6 +3,7 @@ import * as oaPlus from "./openApiPlus"
 import * as sm from "@ts-common/string-map"
 import * as _ from "@ts-common/iterator"
 import * as ps from "@ts-common/property-set"
+import { Json, stringify } from "@ts-common/json"
 
 type OptionalProperties<T> = {
     readonly [K in keyof T]+?: T[K]
@@ -19,7 +20,7 @@ function isJsonReference<T>(v: oa.JsonReference|T): v is oa.JsonReference {
  *
  * TODO: the given parameter can have a `$ref` or a `schema`. The `schema` may have a `$ref` as well.
  */
-function getParameterEnum(parameter: oa.Parameter): ReadonlyArray<string>|undefined {
+function getParameterEnum(parameter: oa.Parameter): ReadonlyArray<Json>|undefined {
     if (parameter.in === "body") {
         // TODO: we may need to get it from `schema`.
         return undefined
@@ -45,7 +46,7 @@ function tracked<K extends keyof oaPlus.Main>(source: oaPlus.Main, k: K): Tracke
 
 function resolve<T>(
     t: Tracked<sm.StringMap<T|undefined>|undefined>,
-    ref: oaPlus.JsonReference
+    ref: oa.JsonReference
 ): T|undefined {
     const value = t.value
     if (value === undefined) {
@@ -265,10 +266,10 @@ function convertOpenApi(context: Context): oa.Main {
 }
 
 export function mergeEnum(
-    a: ReadonlyArray<string>, b: ReadonlyArray<string>
-): ReadonlyArray<string> {
+    a: ReadonlyArray<Json>, b: ReadonlyArray<Json>
+): ReadonlyArray<Json> {
     const c = _.concat(a, b)
-    const f = _.map(c, v => sm.entry(v, true))
+    const f = _.map(c, v => sm.entry(stringify(v), true))
     const m = sm.stringMap(f)
     const result = _.map(sm.entries(m), ([n]) => n)
     return _.toArray(result)
@@ -288,11 +289,11 @@ export function convert(source: oaPlus.Main, discriminator: string): sm.StringMa
         const entries = _.map(
             discriminatorEnum,
             value => sm.entry(
-                value,
+                stringify(value),
                 convertOpenApi({
                     source,
                     discriminatorName: discriminator,
-                    discriminatorValue: value
+                    discriminatorValue: stringify(value)
                 })
             )
         )
