@@ -1,6 +1,6 @@
 {
   "title": "A JSON Schema for Swagger 2.0 API.",
-  "id": "http://swagger.io/v2/schema.json#",
+  "$id": "http://swagger.io/v2/schema.json#",
   "$schema": "draft04Schema.json#",
   "type": "object",
   "required": [
