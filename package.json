@@ -36,7 +36,7 @@
   "devDependencies": {
     "@ts-common/schema2ts": "0.0.46",
     "@types/mocha": "^5.2.5",
-    "mocha": "^5.2.0",
+    "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "swagger-schema-official": "^2.0.0-bab6bed",
     "tslint": "^5.11.0",
